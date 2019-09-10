@@ -295,6 +295,7 @@ public class ChatUserItemController implements Controller<Node> {
   private void setAvatarUrl(@Nullable String avatarUrl) {
     updateAvatarTooltip();
     if (Strings.isNullOrEmpty(avatarUrl)) {
+      avatarImageView.setImage(null);
       avatarImageView.setVisible(false);
     } else {
       // Loading the avatar image asynchronously would be better but asynchronous list cell updates don't work well
@@ -397,6 +398,7 @@ public class ChatUserItemController implements Controller<Node> {
 
   private void setCountry(String country) {
     if (StringUtils.isEmpty(country)) {
+      countryImageView.setImage(null);
       countryImageView.setVisible(false);
     } else {
       countryFlagService.loadCountryFlag(country).ifPresent(image -> {
@@ -496,6 +498,7 @@ public class ChatUserItemController implements Controller<Node> {
     Player player = playerOptional.get();
 
     if (player.getStatus() == PlayerStatus.IDLE) {
+      playerStatusIndicator.setImage(null);
       playerStatusIndicator.setVisible(false);
     } else {
       playerStatusIndicator.setVisible(true);

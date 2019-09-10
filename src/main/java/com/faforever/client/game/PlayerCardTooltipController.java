@@ -46,6 +46,7 @@ public class PlayerCardTooltipController implements Controller<Node>, Disposable
 
   public void setPlayer(Player player, int rating) {
     if (player == null) {
+      countryImageView.setImage(null);
       return;
     }
     countryFlagService.loadCountryFlag(player.getCountry()).ifPresent(image -> countryImageView.setImage(image));

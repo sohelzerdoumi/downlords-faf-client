@@ -181,6 +181,7 @@ public class ReplayVaultController implements Controller<Node> {
         super.updateItem(map, empty);
 
         if (empty || map == null) {
+          imageView.setImage(null);
           setText(null);
           setGraphic(null);
         } else {

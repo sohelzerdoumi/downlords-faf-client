@@ -161,6 +161,7 @@ public class ReplayDetailController implements Controller<Node> {
       mapThumbnailImageView.setImage(image);
       onMapLabel.setText(i18n.get("game.onMapFormat", map.getDisplayName()));
     } else {
+      mapThumbnailImageView.setImage(null);
       onMapLabel.setText(i18n.get("game.onUnknownMap"));
     }
 

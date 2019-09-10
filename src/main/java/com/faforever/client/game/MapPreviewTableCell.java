@@ -21,6 +21,7 @@ public class MapPreviewTableCell extends TableCell<Game, Image> {
     super.updateItem(item, empty);
 
     if (empty || item == null) {
+      imageVew.setImage(null);
       setText(null);
       setGraphic(null);
     } else {
