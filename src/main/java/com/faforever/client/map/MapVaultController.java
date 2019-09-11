@@ -156,10 +156,26 @@ public class MapVaultController extends AbstractViewController<Node> {
   @Override
   protected void onDisplay(NavigateEvent navigateEvent) {
     if (navigateEvent instanceof ShowLadderMapsEvent) {
-      showMoreLadderdMaps();
+      showMoreLadderMaps();
     } else if (state.get() == State.UNINITIALIZED) {
       displayShowroomMaps();
+    } else {
+      onRefreshButtonClicked();
     }
+  }
+
+  @Override
+  protected void onHide() {
+    super.onHide();
+    System.out.println("MapVaultController onHide " + recommendedPane.toString());
+    Platform.runLater(() -> {
+      searchResultPane.getChildren().clear();
+      mostPlayedPane.getChildren().clear();
+      recommendedPane.getChildren().clear();
+      mostLikedPane.getChildren().clear();
+      newestPane.getChildren().clear();
+      ladderPane.getChildren().clear();
+    });
   }
 
   private void displayShowroomMaps() {
@@ -321,7 +337,7 @@ public class MapVaultController extends AbstractViewController<Node> {
     displayMapsFromSupplier(() -> mapService.getMostPlayedMaps(LOAD_PER_PAGE, currentPage));
   }
 
-  public void showMoreLadderdMaps() {
+  public void showMoreLadderMaps() {
     enterLoadingState();
     currentPage++;
     displayMapsFromSupplier(() -> mapService.getLadderMaps(LOAD_PER_PAGE, currentPage));

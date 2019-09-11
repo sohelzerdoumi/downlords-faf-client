@@ -83,7 +83,7 @@
                                            GridPane.rowIndex="6"/>
                                 <FlowPane fx:id="mostPlayedPane" hgap="10.0" maxWidth="1.7976931348623157E308" prefWrapLength="1500.0" vgap="10.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
                                 <Label styleClass="h2" text="%mapVault.ladder" GridPane.rowIndex="8"/>
-                                <JFXButton mnemonicParsing="false" onAction="#showMoreLadderdMaps"
+                                <JFXButton mnemonicParsing="false" onAction="#showMoreLadderMaps"
                                            styleClass="button-raised" text="%more" GridPane.columnIndex="1"
                                            GridPane.rowIndex="8"/>
                                 <FlowPane fx:id="ladderPane" hgap="10.0" maxWidth="1.7976931348623157E308"

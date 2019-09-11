@@ -1,6 +1,6 @@
 package com.faforever.client.vault.replay;
 
-import com.faforever.client.fx.Controller;
+import com.faforever.client.fx.AbstractViewController;
 import com.faforever.client.fx.NodeTableCell;
 import com.faforever.client.fx.StringCell;
 import com.faforever.client.game.Game;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class LiveReplayController implements Controller<Node> {
+public class LiveReplayController extends AbstractViewController<Node> {
   private final ObjectProperty<Game> selectedGame;
   private final GameService gameService;
   private final UiService uiService;

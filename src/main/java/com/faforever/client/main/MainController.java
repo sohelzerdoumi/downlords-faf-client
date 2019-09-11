@@ -237,7 +237,10 @@ public class MainController implements Controller<Node> {
       JavaFxUtil.setAnchors(node, 0d);
     }
 
-    Optional.ofNullable(currentItem).ifPresent(item -> getView(item).hide());
+    if (!navigateEvent.getItem().equals(currentItem)) {
+      Optional.ofNullable(currentItem).ifPresent(item -> getView(item).hide());
+    }
+
     controller.display(navigateEvent);
   }
 

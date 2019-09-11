@@ -147,6 +147,16 @@ public class ModVaultController extends AbstractViewController<Node> {
     displayShowroomMods();
   }
 
+  @Override
+  protected void onHide() {
+    Platform.runLater(() -> {
+      searchResultPane.getChildren().clear();
+      newestPane.getChildren().clear();
+      highestRatedPane.getChildren().clear();
+      highestRatedUiPane.getChildren().clear();
+    });
+  }
+
   private void displayShowroomMods() {
     enterLoadingState();
     modService.getNewestMods(TOP_ELEMENT_COUNT, 1).thenAccept(mods -> replaceSearchResult(mods, newestPane))

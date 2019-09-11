@@ -61,6 +61,7 @@ public class VaultController extends AbstractViewController<Node> {
 
   @Override
   protected void onDisplay(NavigateEvent navigateEvent) {
+    System.out.println("VaultController onDisplay");
     isHandlingEvent = true;
 
     try {
@@ -80,5 +81,14 @@ public class VaultController extends AbstractViewController<Node> {
     } finally {
       isHandlingEvent = false;
     }
+  }
+
+  @Override
+  protected void onHide() {
+    super.onHide();
+    System.out.println("VaultController onHide");
+    mapVaultController.hide();
+    modVaultController.hide();
+    onlineReplayVaultController.hide();
   }
 }
