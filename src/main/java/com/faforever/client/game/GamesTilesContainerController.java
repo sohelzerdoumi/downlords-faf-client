@@ -46,7 +46,7 @@ public class GamesTilesContainerController implements Controller<Node> {
   @VisibleForTesting
   Map<Integer, Node> uidToGameCard;
   private GameTooltipController gameTooltipController;
-  private Tooltip tooltip;
+  public Tooltip tooltip;
 
   public GamesTilesContainerController(UiService uiService, PreferencesService preferencesService) {
     this.uiService = uiService;

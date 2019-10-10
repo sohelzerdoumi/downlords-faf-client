@@ -21,8 +21,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WeakChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.SortEvent;
 import javafx.scene.control.TableCell;
@@ -40,6 +42,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +73,7 @@ public class GamesTableController implements Controller<Node> {
   private final ChangeListener<Boolean> showModdedGamesChangedListener;
   private final ChangeListener<Boolean> showPasswordProtectedGamesChangedListener;
   private GameTooltipController gameTooltipController;
-  private Tooltip tooltip;
+  public Tooltip tooltip;
 
   @Inject
   public GamesTableController(MapService mapService, JoinGameHelper joinGameHelper, I18n i18n, UiService uiService, PreferencesService preferencesService) {

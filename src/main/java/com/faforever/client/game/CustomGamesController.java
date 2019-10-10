@@ -1,5 +1,6 @@
 package com.faforever.client.game;
 
+import com.faforever.client.TooltipMonitor;
 import com.faforever.client.fx.AbstractViewController;
 import com.faforever.client.fx.JavaFxUtil;
 import com.faforever.client.game.GamesTilesContainerController.TilesSortingOrder;
@@ -18,7 +19,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.concurrent.Task;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -37,6 +40,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -217,9 +222,48 @@ public class CustomGamesController extends AbstractViewController<Node> {
   public Node getRoot() {
     return gamesRoot;
   }
-
+  
+  TooltipMonitor tableTooltipMonitor = new TooltipMonitor();
+  
   public void onTableButtonClicked() {
     gamesTableController = uiService.loadFxml("theme/play/games_table.fxml");
+    
+    {
+      WeakReference<GamesTableController> weakRef = new WeakReference<>(gamesTableController);
+      try {
+//        final Field dirtyNodesSizeField = Scene.class.getDeclaredField("dirtyNodesSize");
+//        dirtyNodesSizeField.setAccessible(true);
+        Task<Void> task = new Task<>() {
+          @Override
+          public Void call() throws Exception {
+            while (true) {
+              GamesTableController ref = weakRef.get();
+              if (ref == null) break;
+              Platform.runLater(() -> {
+                Scene tooltipScene = ref.tooltip.getScene();
+                if (tooltipScene != null) {
+                  tableTooltipMonitor.iterate(tooltipScene);
+//                  try {
+//                    Integer dirtyNodesSize = (Integer) dirtyNodesSizeField.get(tooltipScene);
+//                    System.out.println(threadId + ":  " + dirtyNodesSize);
+//                  } catch (IllegalArgumentException | IllegalAccessException e) {
+//                    e.printStackTrace();
+//                  }
+                }
+              });
+              Thread.sleep(500);
+            }
+            return null;
+          }
+        };
+        Thread th = new Thread(task);
+        th.setDaemon(true);
+        th.start();
+      } catch (SecurityException e) {
+        e.printStackTrace();
+      }
+    }
+    
     gamesTableController.selectedGameProperty().addListener((observable, oldValue, newValue) -> setSelectedGame(newValue));
     Platform.runLater(() -> {
       gamesTableController.initializeGameTable(filteredItems);
@@ -244,6 +288,43 @@ public class CustomGamesController extends AbstractViewController<Node> {
 
   public void onTilesButtonClicked() {
     gamesTilesContainerController = uiService.loadFxml("theme/play/games_tiles_container.fxml");
+    
+//    {
+//      WeakReference<GamesTilesContainerController> weakRef = new WeakReference<>(gamesTilesContainerController);
+//      try {
+//        final Field dirtyNodesSizeField = Scene.class.getDeclaredField("dirtyNodesSize");
+//        dirtyNodesSizeField.setAccessible(true);
+//        Task<Void> task = new Task<>() {
+//          @Override
+//          public Void call() throws Exception {
+//            long threadId = Thread.currentThread().getId();
+//            while (true) {
+//              GamesTilesContainerController ref = weakRef.get();
+//              if (ref == null) break;
+//              Platform.runLater(() -> {
+//                Scene tooltipScene = ref.tooltip.getScene();
+//                if (tooltipScene != null) {
+//                  try {
+//                    Integer dirtyNodesSize = (Integer) dirtyNodesSizeField.get(tooltipScene);
+//                    System.out.println(threadId + ":  " + tooltipScene.toString() + " :" + dirtyNodesSize);
+//                  } catch (IllegalArgumentException | IllegalAccessException e) {
+//                    e.printStackTrace();
+//                  }
+//                }
+//              });
+//              Thread.sleep(2000);
+//            }
+//            return null;
+//          }
+//        };
+//        Thread th = new Thread(task);
+//        th.setDaemon(true);
+//        th.start();
+//      } catch (NoSuchFieldException | SecurityException e) {
+//        e.printStackTrace();
+//      }
+//    }
+    
     JavaFxUtil.addListener(gamesTilesContainerController.selectedGameProperty(), new WeakChangeListener<>(gameChangeListener));
     chooseSortingTypeChoiceBox.getItems().clear();
 
