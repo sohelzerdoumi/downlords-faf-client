@@ -135,8 +135,9 @@ public class ForgedAlliancePrefs {
     this.installationPath.set(path);
   }
 
+  @Deprecated
   public ObjectProperty<Path> pathProperty() {
-    return path;
+    throw new NotImplementedException("Deprecated variable");
   }
 
   public boolean isForceRelay() {
