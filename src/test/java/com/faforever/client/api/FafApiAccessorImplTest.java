@@ -247,19 +247,6 @@ public class FafApiAccessorImplTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
-  public void testChangePassword() {
-    instance.changePassword("junit", "currentPasswordHash", "newPasswordHash");
-
-    ArgumentCaptor<Map<String, String>> captor = ArgumentCaptor.forClass(Map.class);
-    verify(restOperations).postForEntity(eq("/users/changePassword"), captor.capture(), eq(String.class));
-
-    Map<String, String> body = captor.getValue();
-    assertThat(body.get("currentPassword"), is("currentPasswordHash"));
-    assertThat(body.get("newPassword"), is("newPasswordHash"));
-  }
-
-  @Test
   public void testGetCoopMissions() {
     when(restOperations.getForObject(startsWith("/data/coopMission"), eq(List.class))).thenReturn(emptyList());
 

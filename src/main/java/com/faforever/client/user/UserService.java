@@ -5,8 +5,6 @@ import com.faforever.client.preferences.PreferencesService;
 import com.faforever.client.remote.FafService;
 import com.faforever.client.remote.domain.LoginMessage;
 import com.faforever.client.remote.domain.NoticeMessage;
-import com.faforever.client.task.CompletableTask;
-import com.faforever.client.task.TaskService;
 import com.faforever.client.user.event.LogOutRequestEvent;
 import com.faforever.client.user.event.LoggedOutEvent;
 import com.faforever.client.user.event.LoginSuccessEvent;
@@ -18,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +33,6 @@ public class UserService implements InitializingBean {
   private final FafService fafService;
   private final PreferencesService preferencesService;
   private final EventBus eventBus;
-  private final ApplicationContext applicationContext;
-  private final TaskService taskService;
 
   private String password;
   private Integer userId;
@@ -112,16 +107,6 @@ public class UserService implements InitializingBean {
     fafService.disconnect();
     eventBus.post(new LoggedOutEvent());
     preferencesService.getPreferences().getLogin().setAutoLogin(false);
-  }
-
-
-  public CompletableTask<Void> changePassword(String currentPassword, String newPassword) {
-    ChangePasswordTask changePasswordTask = applicationContext.getBean(ChangePasswordTask.class);
-    changePasswordTask.setUsername(username.get());
-    changePasswordTask.setCurrentPassword(currentPassword);
-    changePasswordTask.setNewPassword(newPassword);
-
-    return taskService.submitTask(changePasswordTask);
   }
 
   @Override

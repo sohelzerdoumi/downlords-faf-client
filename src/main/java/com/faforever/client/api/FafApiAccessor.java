@@ -81,8 +81,6 @@ public interface FafApiAccessor {
 
   List<CoopResult> getCoopLeaderboard(String missionId, int numberOfPlayers);
 
-  void changePassword(String username, String currentPasswordHash, String newPasswordHash) throws IOException;
-
   ModVersion getModVersion(String uid);
 
   List<FeaturedModFile> getFeaturedModFiles(FeaturedMod featuredMod, Integer version);

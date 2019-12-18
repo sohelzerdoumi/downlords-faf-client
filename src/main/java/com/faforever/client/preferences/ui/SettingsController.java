@@ -25,7 +25,6 @@ import com.faforever.client.theme.Theme;
 import com.faforever.client.theme.UiService;
 import com.faforever.client.ui.preferences.event.GameDirectoryChooseEvent;
 import com.faforever.client.update.ClientUpdateService;
-import com.faforever.client.user.UserService;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.eventbus.EventBus;
 import javafx.application.Platform;
@@ -41,8 +40,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
@@ -75,7 +72,6 @@ import static com.faforever.client.fx.JavaFxUtil.PATH_STRING_CONVERTER;
 public class SettingsController implements Controller<Node> {
 
   private final NotificationService notificationService;
-  private final UserService userService;
   private final PreferencesService preferencesService;
   private final UiService uiService;
   private final I18n i18n;
@@ -119,13 +115,8 @@ public class SettingsController implements Controller<Node> {
   public ToggleButton topRightToastButton;
   public ToggleButton topLeftToastButton;
   public ToggleButton bottomRightToastButton;
-  public PasswordField currentPasswordField;
-  public PasswordField newPasswordField;
-  public PasswordField confirmPasswordField;
   public ComboBox<TimeInfo> timeComboBox;
   public ComboBox<ChatFormat> chatComboBox;
-  public Label passwordChangeErrorLabel;
-  public Label passwordChangeSuccessLabel;
   public ComboBox<UnitDataBaseType> unitDatabaseComboBox;
   public Toggle notifyOnAtMentionOnlyToggle;
   public Pane languagesContainer;
@@ -140,10 +131,9 @@ public class SettingsController implements Controller<Node> {
   private ChangeListener<Theme> currentThemeChangeListener;
   private InvalidationListener availableLanguagesListener;
 
-  public SettingsController(UserService userService, PreferencesService preferencesService, UiService uiService,
+  public SettingsController(PreferencesService preferencesService, UiService uiService,
                             I18n i18n, EventBus eventBus, NotificationService notificationService,
                             PlatformService platformService, ClientProperties clientProperties, ClientUpdateService clientUpdateService) {
-    this.userService = userService;
     this.preferencesService = preferencesService;
     this.uiService = uiService;
     this.i18n = i18n;
@@ -285,7 +275,6 @@ public class SettingsController implements Controller<Node> {
 
     backgroundImageLocation.textProperty().bindBidirectional(preferences.getMainWindow().backgroundImagePathProperty(), PATH_STRING_CONVERTER);
 
-    passwordChangeErrorLabel.setVisible(false);
     addAutoJoinChannelsPopup();
 
     secondaryVaultLocationToggleButton.setSelected(preferences.getForgedAlliance().getVaultBaseDirectory().equals(preferencesService.getSecondaryVaultLocation()));
@@ -433,41 +422,6 @@ public class SettingsController implements Controller<Node> {
     // TODO implement
   }
 
-  public void onChangePasswordClicked() {
-    passwordChangeSuccessLabel.setVisible(false);
-    passwordChangeErrorLabel.setVisible(false);
-
-    if (currentPasswordField.getText().isEmpty()) {
-      passwordChangeErrorLabel.setVisible(true);
-      passwordChangeErrorLabel.setText(i18n.get("settings.account.currentPassword.empty"));
-      return;
-    }
-
-    if (newPasswordField.getText().isEmpty()) {
-      passwordChangeErrorLabel.setVisible(true);
-      passwordChangeErrorLabel.setText(i18n.get("settings.account.newPassword.empty"));
-      return;
-    }
-
-    if (!newPasswordField.getText().equals(confirmPasswordField.getText())) {
-      passwordChangeErrorLabel.setVisible(true);
-      passwordChangeErrorLabel.setText(i18n.get("settings.account.confirmPassword.mismatch"));
-      return;
-    }
-
-    userService.changePassword(currentPasswordField.getText(), newPasswordField.getText()).getFuture()
-        .thenAccept(aVoid -> {
-          passwordChangeSuccessLabel.setVisible(true);
-          currentPasswordField.setText("");
-          newPasswordField.setText("");
-          confirmPasswordField.setText("");
-        }).exceptionally(throwable -> {
-          passwordChangeErrorLabel.setVisible(true);
-          passwordChangeErrorLabel.setText(i18n.get("settings.account.changePassword.error", throwable.getCause().getLocalizedMessage()));
-          return null;
-        }
-    );
-  }
 
   public void onPreviewToastButtonClicked() {
     notificationService.addNotification(new TransientNotification(
