@@ -143,7 +143,7 @@ public class GameServiceTest extends AbstractPlainJavaFxTest {
     instance = new GameService(clientProperties, fafService, forgedAllianceService, mapService,
         preferencesService, gameUpdater, notificationService, i18n, executorService, playerService,
         reportingService, eventBus, iceAdapter, modService, platformService, discordRichPresenceService,
-        replayService, reconnectTimerService);
+        replayService, reconnectTimerService, downloadService);
 
     Preferences preferences = new Preferences();
 
