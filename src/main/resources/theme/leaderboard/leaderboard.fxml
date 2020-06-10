@@ -47,6 +47,5 @@
         </Label>
       </children>
     </VBox>
-      <Pagination fx:id="leaderboardPaginationButton" maxPageIndicatorCount="3" prefHeight="88.0" prefWidth="322.0" />
   </children>
 </VBox>
