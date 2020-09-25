@@ -226,7 +226,7 @@ public class LeaderboardController extends AbstractViewController<Node> {
       series.setName(i18n.get(firstTierSubDivision.getSubDivisionName().getI18nKey()));
       series.getData().addAll(
           divisions.stream().filter(division -> division.getSubDivisionIndex() == firstTierSubDivision.getSubDivisionIndex()).map(division -> {
-            XYChart.Data<String, Integer> data = new XYChart.Data<>(i18n.get(division.getMajorDivisionName().getI18nKey()), 100);
+            XYChart.Data<String, Integer> data = new XYChart.Data<>(i18n.get(division.getMajorDivisionName().getI18nKey()),(int) (Math.random() * 100 + 200 - Math.pow(division.getMajorDivisionIndex() - 3.3, 2) * 30));
             Text label = new Text();
             label.setText(i18n.get(division.getSubDivisionName().getI18nKey()));
             label.setFill(Color.WHITE);
