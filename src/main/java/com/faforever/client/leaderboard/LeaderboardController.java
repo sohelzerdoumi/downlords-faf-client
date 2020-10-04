@@ -205,6 +205,10 @@ public class LeaderboardController extends AbstractViewController<Node> {
                 .filter(tab -> tab.getUserData().equals(division.getSubDivisionIndex()))
                 .findFirst().ifPresent(tab -> {
                   subDivisionTabPane.getSelectionModel().select(tab);
+                  // Need to test this once the api is up
+                  TableView<LeaderboardEntry> newTable = (TableView<LeaderboardEntry>) tab.getContent();
+                  newTable.scrollTo(leaderboardEntry);
+                  newTable.getSelectionModel().select(leaderboardEntry);
             });
           }
         });
