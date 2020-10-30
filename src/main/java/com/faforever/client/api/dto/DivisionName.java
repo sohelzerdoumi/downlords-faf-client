@@ -3,23 +3,26 @@ package com.faforever.client.api.dto;
 import lombok.Getter;
 
 public enum DivisionName {
-  BRONZE("leagues.divisionName.bronze"),
-  SILVER("leagues.divisionName.silver"),
-  GOLD("leagues.divisionName.gold"),
-  DIAMOND("leagues.divisionName.diamond"),
-  MASTER("leagues.divisionName.master"),
-  COMMANDER("leagues.divisionName.commander"),
-  I("leagues.divisionName.I"),
-  II("leagues.divisionName.II"),
-  III("leagues.divisionName.III"),
-  IV("leagues.divisionName.IV"),
-  V("leagues.divisionName.V"),
-  NONE("leagues.divisionName.none");
+  BRONZE("leagues.divisionName.bronze", "Bronze"),
+  SILVER("leagues.divisionName.silver", "Silver"),
+  GOLD("leagues.divisionName.gold", "Gold"),
+  DIAMOND("leagues.divisionName.diamond", "Diamond"),
+  MASTER("leagues.divisionName.master", "Master"),
+  COMMANDER("leagues.divisionName.commander", "Grandmaster"),
+  I("leagues.divisionName.I", "1"),
+  II("leagues.divisionName.II", "2"),
+  III("leagues.divisionName.III", "3"),
+  IV("leagues.divisionName.IV", "4"),
+  V("leagues.divisionName.V", "5"),
+  NONE("leagues.divisionName.none", "");
 
   @Getter
   private final String i18nKey;
+  @Getter
+  private final String imageKey;
 
-  DivisionName(String i18nKey) {
+  DivisionName(String i18nKey, String imageKey) {
     this.i18nKey = i18nKey;
+    this.imageKey = imageKey;
   }
 }

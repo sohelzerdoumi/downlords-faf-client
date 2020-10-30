@@ -1,5 +1,6 @@
 package com.faforever.client.leaderboard;
 
+import com.faforever.client.chat.avatar.AvatarService;
 import com.faforever.client.fx.AbstractViewController;
 import com.faforever.client.fx.JavaFxUtil;
 import com.faforever.client.game.KnownFeaturedMod;
@@ -28,6 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -61,6 +63,7 @@ public class LeaderboardController extends AbstractViewController<Node> {
   private final ReportingService reportingService;
   private final PlayerService playerService;
   private final UiService uiService;
+  private final AvatarService avatarService;
   public VBox leaderboardRoot;
   public TextField searchTextField;
   public Pane connectionProgressPane;
@@ -73,6 +76,7 @@ public class LeaderboardController extends AbstractViewController<Node> {
   public ComboBox<Division> majorDivisionPicker;
   public Arc scoreArc;
   public TabPane subDivisionTabPane;
+  public ImageView playerDivisionImageView;
   private KnownFeaturedMod ratingType;
   private InvalidationListener playerLeagueScoreListener;
 
@@ -194,6 +198,10 @@ public class LeaderboardController extends AbstractViewController<Node> {
         divisions.forEach(division -> {
           if (division.getMajorDivisionIndex() == leaderboardEntry.getMajorDivisionIndex()
               && division.getSubDivisionIndex() == leaderboardEntry.getSubDivisionIndex()) {
+            playerDivisionImageView.setImage(avatarService.loadAvatar(
+                String.format("https://content.faforever.com/divisions/icons/%s-%s.png",
+                    division.getMajorDivisionName().getImageKey(),
+                    division.getSubDivisionName().getImageKey())));
             playerDivisionNameLabel.setText(i18n.get("leaderboard.divisionName",
                 i18n.get(division.getMajorDivisionName().getI18nKey()),
                 i18n.get(division.getSubDivisionName().getI18nKey())).toUpperCase());

@@ -47,7 +47,7 @@
                <children>
                   <HBox>
                      <children>
-                       <VBox alignment="TOP_CENTER" spacing="20.0">
+                       <VBox alignment="BOTTOM_CENTER" spacing="20.0">
                          <StackPane minWidth="180">
                            <Group>
                              <Circle centerX="50" centerY="50" radius="80" styleClass="score-circle" />
@@ -59,8 +59,7 @@
                        </VBox>
                        <Pane minWidth="20.0" HBox.hgrow="ALWAYS" />
                        <VBox alignment="BOTTOM_CENTER" spacing="20.0">
-                         <Label prefHeight="160" prefWidth="320" styleClass="map-preview" />
-                         <ImageView fitHeight="0.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+                         <ImageView fx:id="playerDivisionImageView" fitHeight="200.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" />
                          <Label fx:id="playerDivisionNameLabel" styleClass="heading" text="%leaderboard.divisionName" />
                        </VBox>
                      </children>
