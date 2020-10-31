@@ -51,9 +51,9 @@
                          <StackPane minWidth="180">
                            <Group>
                              <Circle centerX="50" centerY="50" radius="80" styleClass="score-circle" />
-                             <Arc fx:id="scoreArc" centerX="50" centerY="50" length="-360" radiusX="80" radiusY="80" startAngle="90" styleClass="score-arc" />
+                             <Arc fx:id="scoreArc" centerX="50" centerY="50" length="0" radiusX="80" radiusY="80" startAngle="90" styleClass="score-arc" />
                            </Group>
-                           <Label fx:id="playerScoreLabel" styleClass="score" text="6"/>
+                           <Label fx:id="playerScoreLabel" styleClass="score" text="/"/>
                          </StackPane>
                          <Label fx:id="scoreLabel" styleClass="heading" text="%leaderboard.score" />
                        </VBox>

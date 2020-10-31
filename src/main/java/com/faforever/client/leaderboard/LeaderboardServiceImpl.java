@@ -75,7 +75,14 @@ public class LeaderboardServiceImpl implements LeaderboardService {
     entry.setSubDivisionIndex(4);
     entry.setMajorDivisionIndex(2);
     entry.setScore(8);
-    return CompletableFuture.completedFuture(entry);
+    entry.setGamesPlayed(3);
+
+    Throwable noEntry = new Throwable();
+    boolean testNoEntry = true;
+    if (testNoEntry)
+      return CompletableFuture.failedFuture(noEntry);
+    else
+      return CompletableFuture.completedFuture(entry);
     //return fafService.getLeagueEntryForPlayer(playerId);
   }
 

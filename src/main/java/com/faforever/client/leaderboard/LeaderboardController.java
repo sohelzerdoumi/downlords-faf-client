@@ -46,6 +46,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -193,7 +194,6 @@ public class LeaderboardController extends AbstractViewController<Node> {
   private void updateStats(Player player) {
 
     leaderboardService.getLeagueEntryForPlayer(player.getId()).thenAccept(leaderboardEntry -> Platform.runLater(() -> {
-      playerScoreLabel.setText(i18n.number(leaderboardEntry.getScore()));
       leaderboardService.getDivisions().thenAccept(divisions -> {
         divisions.forEach(division -> {
           if (division.getMajorDivisionIndex() == leaderboardEntry.getMajorDivisionIndex()
@@ -206,6 +206,7 @@ public class LeaderboardController extends AbstractViewController<Node> {
                 i18n.get(division.getMajorDivisionName().getI18nKey()),
                 i18n.get(division.getSubDivisionName().getI18nKey())).toUpperCase());
             scoreArc.setLength(-360.0 * leaderboardEntry.getScore() / division.getHighestScore());
+            playerScoreLabel.setText(i18n.number(leaderboardEntry.getScore()));
             majorDivisionPicker.getItems().stream()
                 .filter(item -> item.getMajorDivisionIndex() == division.getMajorDivisionIndex())
                 .findFirst().ifPresent(item -> majorDivisionPicker.getSelectionModel().select(item));
@@ -218,9 +219,9 @@ public class LeaderboardController extends AbstractViewController<Node> {
                   newTable.scrollTo(leaderboardEntry);
                   newTable.getSelectionModel().select(leaderboardEntry);
             });
+            plotDivisionDistributions(divisions, leaderboardEntry);
           }
         });
-        plotDivisionDistributions(divisions, leaderboardEntry);
       }).exceptionally(throwable -> {
         logger.warn("Could not get list of divisions", throwable);
         return null;
@@ -228,6 +229,14 @@ public class LeaderboardController extends AbstractViewController<Node> {
     })).exceptionally(throwable -> {
       // Debug instead of warn, since it's fairly common that players don't have a leaderboard entry which causes a 404
       logger.debug("Leaderboard entry could not be read for current player: " + player.getUsername(), throwable);
+      playerDivisionNameLabel.setText(i18n.get("leaderboard.placement",
+          "X", // Would rather do this:
+          // leaderboardEntry.getGamesPlayed(),
+          10));
+      majorDivisionPicker.getItems().stream()
+          .findFirst().ifPresent(item -> majorDivisionPicker.getSelectionModel().select(item));
+      subDivisionTabPane.getTabs().stream()
+          .findFirst().ifPresent(tab -> subDivisionTabPane.getSelectionModel().select(tab));
       return null;
     });
   }
