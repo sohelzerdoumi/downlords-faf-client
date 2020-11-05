@@ -23,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -78,6 +79,7 @@ public class LeaderboardController extends AbstractViewController<Node> {
   public Arc scoreArc;
   public TabPane subDivisionTabPane;
   public ImageView playerDivisionImageView;
+  public CategoryAxis rankNumber;
   private KnownFeaturedMod ratingType;
   private InvalidationListener playerLeagueScoreListener;
 
@@ -266,6 +268,18 @@ public class LeaderboardController extends AbstractViewController<Node> {
           }).collect(Collectors.toList()));
       Platform.runLater(() -> ratingDistributionChart.getData().add(series));
     });
+    leaderboardService.getDivisionStats()
+        .thenAccept(divisionStats -> {
+          int totalPlayers = 0;
+          for (DivisionStat entry : divisionStats) {
+            totalPlayers += entry.getTotalCount();
+          }
+          rankNumber.labelProperty().setValue(i18n.get("leaderboard.rank", leaderboardEntry.getRank(), totalPlayers));
+        })
+        .exceptionally(throwable -> {
+          logger.warn("Could not get player rank", throwable);
+          return null;
+        });
   }
 
   private void addNodeOnTopOfBar(XYChart.Data<String, Integer> data, Node nodeToAdd) {

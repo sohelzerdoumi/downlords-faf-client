@@ -78,7 +78,7 @@ public class LeaderboardServiceImpl implements LeaderboardService {
     entry.setGamesPlayed(3);
 
     Throwable noEntry = new Throwable();
-    boolean testNoEntry = true;
+    boolean testNoEntry = false;
     if (testNoEntry)
       return CompletableFuture.failedFuture(noEntry);
     else
