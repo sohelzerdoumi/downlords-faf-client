@@ -66,7 +66,7 @@ public interface FafApiAccessor {
 
   Ladder1v1LeaderboardEntry getLadder1v1EntryForPlayer(int playerId);
 
-  DivisionLeaderboardEntry getLeagueEntryForPlayer(int playerId);
+  DivisionLeaderboardEntry getLeagueEntryForPlayer(int playerId, String league);
 
   List<GamePlayerStats> getGamePlayerStats(int playerId, KnownFeaturedMod knownFeaturedMod);
 
@@ -144,5 +144,5 @@ public interface FafApiAccessor {
 
   MeResult getOwnPlayer();
 
-  List<Division> getDivisions();
+  List<Division> getDivisions(String league);
 }

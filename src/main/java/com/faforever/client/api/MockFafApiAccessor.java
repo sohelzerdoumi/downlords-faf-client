@@ -131,7 +131,7 @@ public class MockFafApiAccessor implements FafApiAccessor {
   }
 
   @Override
-  public DivisionLeaderboardEntry getLeagueEntryForPlayer(int playerId) {
+  public DivisionLeaderboardEntry getLeagueEntryForPlayer(int playerId, String league) {
     return null;
   }
 
@@ -315,7 +315,7 @@ public class MockFafApiAccessor implements FafApiAccessor {
   }
 
   @Override
-  public List<Division> getDivisions() {
+  public List<Division> getDivisions(String league) {
     return Collections.emptyList();
   }
 

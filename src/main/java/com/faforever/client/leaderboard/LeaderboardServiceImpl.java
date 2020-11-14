@@ -2,7 +2,7 @@ package com.faforever.client.leaderboard;
 
 import com.faforever.client.FafClientApplication;
 import com.faforever.client.api.dto.DivisionName;
-import com.faforever.client.game.KnownFeaturedMod;
+import com.faforever.client.leaderboard.LeaderboardController.League;
 import com.faforever.client.remote.FafService;
 import com.faforever.client.util.RatingUtil;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +70,7 @@ public class LeaderboardServiceImpl implements LeaderboardService {
   }
 
   @Override
-  public CompletableFuture<LeaderboardEntry> getLeagueEntryForPlayer(int playerId) {
+  public CompletableFuture<LeaderboardEntry> getLeagueEntryForPlayer(int playerId, League leagueType) {
     LeaderboardEntry entry = new LeaderboardEntry();
     entry.setSubDivisionIndex(4);
     entry.setMajorDivisionIndex(2);
@@ -83,37 +83,30 @@ public class LeaderboardServiceImpl implements LeaderboardService {
       return CompletableFuture.failedFuture(noEntry);
     else
       return CompletableFuture.completedFuture(entry);
-    //return fafService.getLeagueEntryForPlayer(playerId);
+    //return fafService.getLeagueEntryForPlayer(playerId, leagueType.toString());
   }
 
   @Override
-  public CompletableFuture<List<LeaderboardEntry>> getEntries(KnownFeaturedMod ratingType) {
-    switch (ratingType) {
-      case FAF:
-        return fafService.getGlobalLeaderboard();
-      case LADDER_1V1:
-        return fafService.getLadder1v1Leaderboard();
-      default:
-        throw new IllegalArgumentException("Not supported: " + ratingType);
-    }
+  public CompletableFuture<List<LeaderboardEntry>> getEntries(Division division) {
+    return fafService.getDivisionLeaderboard(division);
   }
 
   @Override
-  public CompletableFuture<List<Division>> getDivisions() {
+  public CompletableFuture<List<Division>> getDivisions(League leagueType) {
     DivisionName[] subnames = {V, IV, III, II, I};
     DivisionName[] majornames = {BRONZE, SILVER, GOLD, DIAMOND, MASTER};
     List<Division> divisions = new LinkedList<Division>();
     for (int k=1; k<6; k++) {
       for (int i=1; i<6; i++) {
-        Division div = new Division(1, k, i, majornames[k-1], subnames[i-1], 10);
+        Division div = new Division(1, k, i, majornames[k-1], subnames[i-1], 10, leagueType);
         //if (k!=5 || i!=5)
         divisions.add(div);
       }
     }
-    Division div2 = new Division(1, 6, 1, COMMANDER, NONE, 10);
+    Division div2 = new Division(1, 6, 1, COMMANDER, NONE, 10, leagueType);
     divisions.add(div2);
     return CompletableFuture.completedFuture(divisions);
-    //return fafService.getDivisions();
+    //return fafService.getDivisions(leagueType.toString());
   }
 
   @Override

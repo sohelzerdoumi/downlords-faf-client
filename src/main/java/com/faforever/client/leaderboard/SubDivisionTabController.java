@@ -2,15 +2,12 @@ package com.faforever.client.leaderboard;
 
 import com.faforever.client.fx.Controller;
 import com.faforever.client.fx.StringCell;
-import com.faforever.client.game.KnownFeaturedMod;
 import com.faforever.client.i18n.I18n;
 import com.faforever.client.notification.ImmediateErrorNotification;
 import com.faforever.client.notification.NotificationService;
 import com.faforever.client.reporting.ReportingService;
-import com.faforever.client.util.Validator;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import lombok.RequiredArgsConstructor;
@@ -61,8 +58,16 @@ public class SubDivisionTabController implements Controller<Node> {
 
     scoreColumn.setCellValueFactory(param -> param.getValue().ratingProperty());
     scoreColumn.setCellFactory(param -> new StringCell<>(rating -> i18n.number(rating.intValue())));
+  }
 
-    leaderboardService.getEntries(KnownFeaturedMod.LADDER_1V1).thenAccept(leaderboardEntryBeans -> {
+  public Tab getTab() {
+    return subDivisionTab;
+  }
+
+  public void populate(Division division) {
+    subDivisionTab.setText(i18n.get(division.getSubDivisionName().getI18nKey()).toUpperCase());
+
+    leaderboardService.getEntries(division).thenAccept(leaderboardEntryBeans -> {
       ratingTable.setItems(observableList(leaderboardEntryBeans));
     }).exceptionally(throwable -> {
       logger.warn("Error while loading leaderboard entries", throwable);
@@ -72,13 +77,5 @@ public class SubDivisionTabController implements Controller<Node> {
       ));
       return null;
     });
-  }
-
-  public Tab getTab() {
-    return subDivisionTab;
-  }
-
-  public void setTabText(String text) {
-    subDivisionTab.setText(text);
   }
 }

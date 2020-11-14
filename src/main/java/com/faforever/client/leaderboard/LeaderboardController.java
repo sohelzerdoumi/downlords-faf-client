@@ -3,14 +3,10 @@ package com.faforever.client.leaderboard;
 import com.faforever.client.chat.avatar.AvatarService;
 import com.faforever.client.fx.AbstractViewController;
 import com.faforever.client.fx.JavaFxUtil;
-import com.faforever.client.game.KnownFeaturedMod;
 import com.faforever.client.i18n.I18n;
 import com.faforever.client.main.event.NavigateEvent;
-import com.faforever.client.notification.ImmediateErrorNotification;
-import com.faforever.client.notification.NotificationService;
 import com.faforever.client.player.Player;
 import com.faforever.client.player.PlayerService;
-import com.faforever.client.reporting.ReportingService;
 import com.faforever.client.theme.UiService;
 import com.faforever.client.util.Assert;
 import com.faforever.client.util.Validator;
@@ -47,7 +43,6 @@ import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -60,9 +55,7 @@ public class LeaderboardController extends AbstractViewController<Node> {
   private static final PseudoClass NOTIFICATION_HIGHLIGHTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("highlighted-bar");
 
   private final LeaderboardService leaderboardService;
-  private final NotificationService notificationService;
   private final I18n i18n;
-  private final ReportingService reportingService;
   private final PlayerService playerService;
   private final UiService uiService;
   private final AvatarService avatarService;
@@ -80,7 +73,7 @@ public class LeaderboardController extends AbstractViewController<Node> {
   public TabPane subDivisionTabPane;
   public ImageView playerDivisionImageView;
   public CategoryAxis rankNumber;
-  private KnownFeaturedMod ratingType;
+  private League leagueType;
   private InvalidationListener playerLeagueScoreListener;
 
   @Override
@@ -97,18 +90,8 @@ public class LeaderboardController extends AbstractViewController<Node> {
 
     majorDivisionPicker.setConverter(divisionStringConverter());
 
-    leaderboardService.getDivisions().thenAccept(divisions -> Platform.runLater(() -> {
-      majorDivisionPicker.getItems().clear();
-
-      majorDivisionPicker.getItems().addAll(
-          divisions.stream().filter(division -> division.getSubDivisionIndex() == 1).collect(Collectors.toList()));
-    })).exceptionally(throwable -> {
-      logger.warn("Could not read divisions", throwable);
-      return null;
-    });
-
     JavaFxUtil.addListener(playerService.currentPlayerProperty(), (observable, oldValue, newValue) -> Platform.runLater(() -> setCurrentPlayer(newValue)));
-    playerService.getCurrentPlayer().ifPresent(this::setCurrentPlayer);
+
 
     searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
       TableView<LeaderboardEntry> ratingTable = (TableView<LeaderboardEntry>) subDivisionTabPane.getSelectionModel().getSelectedItem().getContent();
@@ -143,7 +126,7 @@ public class LeaderboardController extends AbstractViewController<Node> {
 
   private void searchInAllDivisions(String searchText) {
     playerService.getPlayerForUsername(searchText).ifPresent(player -> {
-      leaderboardService.getLeagueEntryForPlayer(player.getId()).thenAccept(leaderboardEntry -> {
+      leaderboardService.getLeagueEntryForPlayer(player.getId(), leagueType).thenAccept(leaderboardEntry -> {
         majorDivisionPicker.getItems().stream()
             .filter(item -> item.getMajorDivisionIndex() == leaderboardEntry.getMajorDivisionIndex())
             .findFirst().ifPresent(item -> majorDivisionPicker.getSelectionModel().select(item));
@@ -161,28 +144,29 @@ public class LeaderboardController extends AbstractViewController<Node> {
 
   @Override
   protected void onDisplay(NavigateEvent navigateEvent) {
-    Assert.checkNullIllegalState(ratingType, "ratingType must not be null");
+    Assert.checkNullIllegalState(leagueType, "leagueType must not be null");
 
     contentPane.setVisible(false);
-    leaderboardService.getEntries(ratingType).thenAccept(leaderboardEntryBeans -> {
+    leaderboardService.getDivisions(leagueType).thenAccept(divisions -> Platform.runLater(() -> {
+      majorDivisionPicker.getItems().clear();
+
+      majorDivisionPicker.getItems().addAll(
+          divisions.stream().filter(division -> division.getSubDivisionIndex() == 1).collect(Collectors.toList()));
       contentPane.setVisible(true);
-    }).exceptionally(throwable -> {
+    })).exceptionally(throwable -> {
       contentPane.setVisible(false);
-      logger.warn("Error while loading leaderboard entries", throwable);
-      notificationService.addNotification(new ImmediateErrorNotification(
-          i18n.get("errorTitle"), i18n.get("leaderboard.failedToLoad"),
-          throwable, i18n, reportingService
-      ));
+      logger.warn("Could not read divisions", throwable);
       return null;
     });
+    playerService.getCurrentPlayer().ifPresent(this::setCurrentPlayer);
   }
 
   public Node getRoot() {
     return leaderboardRoot;
   }
 
-  public void setRatingType(KnownFeaturedMod ratingType) {
-    this.ratingType = ratingType;
+  public void setLeagueType(League leagueType) {
+    this.leagueType = leagueType;
   }
 
   private void setCurrentPlayer(Player player) {
@@ -195,8 +179,8 @@ public class LeaderboardController extends AbstractViewController<Node> {
 
   private void updateStats(Player player) {
 
-    leaderboardService.getLeagueEntryForPlayer(player.getId()).thenAccept(leaderboardEntry -> Platform.runLater(() -> {
-      leaderboardService.getDivisions().thenAccept(divisions -> {
+    leaderboardService.getLeagueEntryForPlayer(player.getId(), leagueType).thenAccept(leaderboardEntry -> Platform.runLater(() -> {
+      leaderboardService.getDivisions(leagueType).thenAccept(divisions -> {
         divisions.forEach(division -> {
           if (division.getMajorDivisionIndex() == leaderboardEntry.getMajorDivisionIndex()
               && division.getSubDivisionIndex() == leaderboardEntry.getSubDivisionIndex()) {
@@ -319,13 +303,13 @@ public class LeaderboardController extends AbstractViewController<Node> {
 
   public void onMajorDivisionChanged(ActionEvent actionEvent) {
     subDivisionTabPane.getTabs().clear();
-    leaderboardService.getDivisions().thenAccept(divisions ->
+    leaderboardService.getDivisions(leagueType).thenAccept(divisions ->
       divisions.stream()
           .filter(division -> division.getMajorDivisionIndex() == majorDivisionPicker.getValue().getMajorDivisionIndex())
           .forEach(division -> {
             SubDivisionTabController controller = uiService.loadFxml("theme/leaderboard/subDivisionTab.fxml");
             controller.getTab().setUserData(division.getSubDivisionIndex());
-            controller.setTabText(i18n.get(division.getSubDivisionName().getI18nKey()).toUpperCase());
+            controller.populate(division);
             subDivisionTabPane.getTabs().add(controller.getTab());
             subDivisionTabPane.getSelectionModel().selectLast();
           }));
@@ -333,5 +317,9 @@ public class LeaderboardController extends AbstractViewController<Node> {
     Platform.runLater(() -> subDivisionTabPane.setTabMinWidth(subDivisionTabPane.getWidth() / subDivisionTabPane.getTabs().size() - 45.0));
     Platform.runLater(() -> subDivisionTabPane.setTabMaxWidth(subDivisionTabPane.getWidth() / subDivisionTabPane.getTabs().size() - 45.0));
     // Todo: sometimes when starting the client the tabs have no text and still have default width
+  }
+  
+  public enum League {
+    RANKED1V1, RANKED2V2, TEAM;
   }
 }

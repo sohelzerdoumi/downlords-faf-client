@@ -1,7 +1,6 @@
 package com.faforever.client.leaderboard;
 
 
-import com.faforever.client.game.KnownFeaturedMod;
 import com.faforever.client.remote.FafService;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +40,7 @@ public class LeaderboardServiceImplTest {
     List<LeaderboardEntry> ladder1V1Entries = Collections.emptyList();
     when(fafService.getLadder1v1Leaderboard()).thenReturn(CompletableFuture.completedFuture(ladder1V1Entries));
 
-    List<LeaderboardEntry> result = instance.getEntries(KnownFeaturedMod.LADDER_1V1).toCompletableFuture().get(2, TimeUnit.SECONDS);
+    List<LeaderboardEntry> result = instance.getEntries().toCompletableFuture().get(2, TimeUnit.SECONDS);
 
     verify(fafService).getLadder1v1Leaderboard();
     assertThat(result, is(ladder1V1Entries));

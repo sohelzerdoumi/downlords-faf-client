@@ -1,6 +1,7 @@
 package com.faforever.client.leaderboard;
 
 import com.faforever.client.api.dto.DivisionName;
+import com.faforever.client.leaderboard.LeaderboardController.League;
 import lombok.Value;
 
 @Value
@@ -11,4 +12,5 @@ public class Division {
   DivisionName majorDivisionName;
   DivisionName subDivisionName;
   int highestScore;
+  League leagueType;
 }

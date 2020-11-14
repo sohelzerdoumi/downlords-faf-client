@@ -214,7 +214,8 @@ public class FafApiAccessorImpl implements FafApiAccessor, InitializingBean {
   }
 
   @Override
-  public DivisionLeaderboardEntry getLeagueEntryForPlayer(int playerId) {
+  public DivisionLeaderboardEntry getLeagueEntryForPlayer(int playerId, String league) {
+    //return getOne("/leaderboards/"+ league + "/" + playerId, DivisionLeaderboardEntry.class);
     return null;
   }
 
@@ -380,8 +381,8 @@ public class FafApiAccessorImpl implements FafApiAccessor, InitializingBean {
   }
 
   @Override
-  public List<Division> getDivisions() {
-    return null;
+  public List<Division> getDivisions(String league) {
+    return getAll("/" + league);
   }
 
   @Override

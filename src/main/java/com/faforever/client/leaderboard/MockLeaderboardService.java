@@ -1,8 +1,8 @@
 package com.faforever.client.leaderboard;
 
 import com.faforever.client.FafClientApplication;
-import com.faforever.client.game.KnownFeaturedMod;
 import com.faforever.client.i18n.I18n;
+import com.faforever.client.leaderboard.LeaderboardController.League;
 import com.faforever.client.task.CompletableTask;
 import com.faforever.client.task.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class MockLeaderboardService implements LeaderboardService {
   }
 
   @Override
-  public CompletableFuture<List<Division>> getDivisions() {
+  public CompletableFuture<List<Division>> getDivisions(League leagueType) {
     return CompletableFuture.completedFuture(Collections.emptyList());
   }
 
@@ -54,12 +54,12 @@ public class MockLeaderboardService implements LeaderboardService {
   }
 
   @Override
-  public CompletableFuture<LeaderboardEntry> getLeagueEntryForPlayer(int playerId) {
+  public CompletableFuture<LeaderboardEntry> getLeagueEntryForPlayer(int playerId, League leagueType) {
     return null;
   }
 
   @Override
-  public CompletableFuture<List<LeaderboardEntry>> getEntries(KnownFeaturedMod ratingType) {
+  public CompletableFuture<List<LeaderboardEntry>> getEntries(Division division) {
     return taskService.submitTask(new CompletableTask<List<LeaderboardEntry>>(HIGH) {
       @Override
       protected List<LeaderboardEntry> call() throws Exception {

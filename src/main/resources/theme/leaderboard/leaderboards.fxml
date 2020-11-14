@@ -8,14 +8,14 @@
          xmlns="http://javafx.com/javafx/8.0.60"
          fx:controller="com.faforever.client.leaderboard.LeaderboardsController">
     <tabs>
-        <Tab fx:id="ladder1v1LeaderboardTab" text="%leaderboard.ranked1v1">
-            <fx:include fx:id="ladder1v1Leaderboard" source="leaderboard.fxml"/>
+        <Tab fx:id="ranked1v1LeaderboardTab" text="%leaderboard.ranked1v1">
+            <fx:include fx:id="ranked1v1Leaderboard" source="leaderboard.fxml"/>
         </Tab>
-        <Tab fx:id="globalLeaderboardTab" text="%leaderboard.global">
-            <fx:include fx:id="globalLeaderboard" source="leaderboard.fxml"/>
+        <Tab fx:id="ranked2v2LeaderboardTab" text="%leaderboard.ranked2v2">
+            <fx:include fx:id="ranked2v2Leaderboard" source="leaderboard.fxml"/>
         </Tab>
-        <Tab text="Team League">
-            <fx:include source="leaderboard.fxml"/>
+        <Tab fx:id="teamLeaderboardTab" text="%leaderboard.team">
+            <fx:include fx:id="teamLeaderboard" source="leaderboard.fxml"/>
         </Tab>
     </tabs>
 </TabPane>
