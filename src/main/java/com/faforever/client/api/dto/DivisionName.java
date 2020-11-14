@@ -2,6 +2,7 @@ package com.faforever.client.api.dto;
 
 import lombok.Getter;
 
+@Getter
 public enum DivisionName {
   BRONZE("leagues.divisionName.bronze", "Bronze"),
   SILVER("leagues.divisionName.silver", "Silver"),
@@ -16,9 +17,7 @@ public enum DivisionName {
   V("leagues.divisionName.V", "5"),
   NONE("leagues.divisionName.none", "");
 
-  @Getter
   private final String i18nKey;
-  @Getter
   private final String imageKey;
 
   DivisionName(String i18nKey, String imageKey) {

@@ -1,8 +1,8 @@
 package com.faforever.client.leaderboard;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class DivisionStat {
-  private final int totalCount;
+  int totalCount;
 }

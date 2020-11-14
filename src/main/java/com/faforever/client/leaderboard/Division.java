@@ -1,14 +1,14 @@
 package com.faforever.client.leaderboard;
 
 import com.faforever.client.api.dto.DivisionName;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class Division {
-  private final int leagueSeasonId;
-  private final int majorDivisionIndex;
-  private final int subDivisionIndex;
-  private final DivisionName majorDivisionName;
-  private final DivisionName subDivisionName;
-  private final int highestScore;
+  int leagueSeasonId;
+  int majorDivisionIndex;
+  int subDivisionIndex;
+  DivisionName majorDivisionName;
+  DivisionName subDivisionName;
+  int highestScore;
 }
