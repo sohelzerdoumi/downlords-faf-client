@@ -11,6 +11,7 @@ public enum NavigationItem {
   NEWS("theme/news.fxml", "main.news"),
   CHAT("theme/chat/chat.fxml", "main.chat"),
   PLAY("theme/play/play.fxml", "main.play"),
+  REPLAY("theme/vault/replay.fxml", "main.replay"),
   VAULT("theme/vault/vault.fxml", "main.vault"),
   LEADERBOARD("theme/leaderboard/leaderboards.fxml", "main.leaderboards"),
   UNITS("theme/units.fxml", "main.units"),

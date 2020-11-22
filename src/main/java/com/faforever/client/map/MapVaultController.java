@@ -8,7 +8,12 @@ import com.faforever.client.main.event.ShowLadderMapsEvent;
 import com.faforever.client.map.event.MapUploadedEvent;
 import com.faforever.client.notification.NotificationService;
 import com.faforever.client.preferences.PreferencesService;
+import com.faforever.client.query.CategoryFilterController;
+import com.faforever.client.query.DateRangeFilterController;
+import com.faforever.client.query.RangeFilterController;
 import com.faforever.client.query.SearchablePropertyMappings;
+import com.faforever.client.query.TextFilterController;
+import com.faforever.client.query.ToggleFilterController;
 import com.faforever.client.reporting.ReportingService;
 import com.faforever.client.theme.UiService;
 import com.faforever.client.ui.dialog.Dialog;
@@ -27,6 +32,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -55,11 +61,6 @@ public class MapVaultController extends VaultEntityController<MapBean> {
   public void initialize() {
     super.initialize();
 
-    searchController.setRootType(com.faforever.client.api.dto.Map.class);
-    searchController.setSearchableProperties(SearchablePropertyMappings.MAP_PROPERTY_MAPPING);
-    searchController.setSortConfig(preferencesService.getPreferences().getVaultPrefs().mapSortConfigProperty());
-    searchController.setOnlyShowLastYearCheckBoxVisible(false, false);
-
     preferencesService.getRemotePreferencesAsync().thenAccept(clientConfiguration ->
         recommendedShowRoomPageCount = clientConfiguration.getRecommendedMaps().size() / TOP_ELEMENT_COUNT)
         .exceptionally(throwable -> {
@@ -69,6 +70,77 @@ public class MapVaultController extends VaultEntityController<MapBean> {
         });
 
     eventBus.register(this);
+  }
+
+  protected void initSearchController() {
+    searchController.setRootType(com.faforever.client.api.dto.Map.class);
+    searchController.setSearchableProperties(SearchablePropertyMappings.MAP_PROPERTY_MAPPING);
+    searchController.setSortConfig(preferencesService.getPreferences().getVaultPrefs().mapSortConfigProperty());
+    searchController.setOnlyShowLastYearCheckBoxVisible(false);
+    searchController.setVaultRoot(vaultRoot);
+    searchController.setSavedQueries(preferencesService.getPreferences().getVaultPrefs().getSavedMapQueries());
+
+    TextFilterController mapNameFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
+    mapNameFilterController.setPropertyName("displayName");
+    mapNameFilterController.setTitle(i18n.get("map.name"));
+    searchController.addFilterNode(mapNameFilterController);
+
+    TextFilterController authorFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
+    authorFilterController.setPropertyName("author.login");
+    authorFilterController.setTitle(i18n.get("map.author"));
+    searchController.addFilterNode(authorFilterController);
+
+    DateRangeFilterController dateRangeFilterController = uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml");
+    dateRangeFilterController.setTitle(i18n.get("map.updatedDateTime"));
+    dateRangeFilterController.setPropertyName("latestVersion.updateTime");
+    searchController.addFilterNode(dateRangeFilterController);
+
+    LinkedHashMap<String, String> mapSizeMap = new LinkedHashMap<>();
+    mapSizeMap.put("1km", "64");
+    mapSizeMap.put("2km", "128");
+    mapSizeMap.put("5km", "256");
+    mapSizeMap.put("10km", "512");
+    mapSizeMap.put("20km", "1024");
+    mapSizeMap.put("40km", "2048");
+    mapSizeMap.put("80km", "4096");
+
+    CategoryFilterController mapWidthFilterController = uiService.loadFxml("theme/vault/search/categoryFilter.fxml");
+    mapWidthFilterController.setTitle(i18n.get("map.width"));
+    mapWidthFilterController.setPropertyName("latestVersion.width");
+    mapWidthFilterController.setItems(mapSizeMap);
+    searchController.addFilterNode(mapWidthFilterController);
+
+    CategoryFilterController mapHeightFilterController = uiService.loadFxml("theme/vault/search/categoryFilter.fxml");
+    mapHeightFilterController.setTitle(i18n.get("map.height"));
+    mapHeightFilterController.setPropertyName("latestVersion.height");
+    mapHeightFilterController.setItems(mapSizeMap);
+    searchController.addFilterNode(mapHeightFilterController);
+
+    RangeFilterController playerCountFilterController = uiService.loadFxml("theme/vault/search/rangeFilter.fxml");
+    playerCountFilterController.setTitle(i18n.get("map.maxPlayers"));
+    playerCountFilterController.setPropertyName("latestVersion.maxPlayers");
+    playerCountFilterController.setMin(0.0);
+    playerCountFilterController.setMax(16.0);
+    playerCountFilterController.setIncrement(1.0);
+    playerCountFilterController.setTickUnit(1.0);
+    playerCountFilterController.setSnapToTicks(true);
+    searchController.addFilterNode(playerCountFilterController);
+
+    RangeFilterController mapPlaysFilterController = uiService.loadFxml("theme/vault/search/rangeFilter.fxml");
+    mapPlaysFilterController.setTitle(i18n.get("map.playCount"));
+    mapPlaysFilterController.setPropertyName("statistics.plays");
+    mapPlaysFilterController.setMin(0.0);
+    mapPlaysFilterController.setMax(10000.0);
+    mapPlaysFilterController.setIncrement(10.0);
+    mapPlaysFilterController.setTickUnit(1000.0);
+    mapPlaysFilterController.setSnapToTicks(true);
+    searchController.addFilterNode(mapPlaysFilterController);
+
+    ToggleFilterController mapRankedFilterController = uiService.loadFxml("theme/vault/search/toggleFilter.fxml");
+    mapRankedFilterController.setTitle(i18n.get("map.onlyRanked"));
+    mapRankedFilterController.setPropertyName("latestVersion.ranked");
+    mapRankedFilterController.setValue("true");
+    searchController.addFilterNode(mapRankedFilterController);
   }
 
   @Override

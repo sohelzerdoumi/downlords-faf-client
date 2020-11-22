@@ -131,6 +131,7 @@ public class MainController implements Controller<Node> {
   public ToggleButton newsButton;
   public ToggleButton chatButton;
   public ToggleButton playButton;
+  public ToggleButton replayButton;
   public ToggleButton tutorialsButton;
   public ToggleButton vaultButton;
   public ToggleButton leaderboardsButton;
@@ -197,6 +198,7 @@ public class MainController implements Controller<Node> {
     newsButton.setUserData(NavigationItem.NEWS);
     chatButton.setUserData(NavigationItem.CHAT);
     playButton.setUserData(NavigationItem.PLAY);
+    replayButton.setUserData(NavigationItem.REPLAY);
     vaultButton.setUserData(NavigationItem.VAULT);
     leaderboardsButton.setUserData(NavigationItem.LEADERBOARD);
     tournamentsButton.setUserData(NavigationItem.TOURNAMENTS);

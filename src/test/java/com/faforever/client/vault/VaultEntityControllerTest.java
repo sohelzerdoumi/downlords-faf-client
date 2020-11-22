@@ -106,6 +106,11 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
     items = createMockElements(50);
     instance = new VaultEntityController<>(uiService, notificationService, i18n, preferencesService, reportingService) {
       @Override
+      protected void initSearchController() {
+        //Do Nothing
+      }
+
+      @Override
       protected Node getEntityCard(Integer integer) {
         GridPane card = new GridPane();
         card.setUserData(integer);

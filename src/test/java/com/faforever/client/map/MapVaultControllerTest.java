@@ -2,11 +2,15 @@ package com.faforever.client.map;
 
 import com.faforever.client.i18n.I18n;
 import com.faforever.client.notification.NotificationService;
-import com.faforever.client.player.PlayerService;
 import com.faforever.client.preferences.Preferences;
 import com.faforever.client.preferences.PreferencesService;
+import com.faforever.client.query.CategoryFilterController;
+import com.faforever.client.query.DateRangeFilterController;
 import com.faforever.client.query.LogicalNodeController;
+import com.faforever.client.query.RangeFilterController;
 import com.faforever.client.query.SpecificationController;
+import com.faforever.client.query.TextFilterController;
+import com.faforever.client.query.ToggleFilterController;
 import com.faforever.client.reporting.ReportingService;
 import com.faforever.client.test.AbstractPlainJavaFxTest;
 import com.faforever.client.theme.UiService;
@@ -59,11 +63,20 @@ public class MapVaultControllerTest extends AbstractPlainJavaFxTest {
   @Mock
   private SpecificationController specificationController;
   @Mock
-  private PlayerService playerService;
-  @Mock
   private ReportingService reportingService;
   @Mock
   private ClientConfiguration clientConfiguration;
+  @Mock
+  private TextFilterController textFilterController;
+  @Mock
+  private ToggleFilterController toggleFilterController;
+  @Mock
+  private DateRangeFilterController dateRangeFilterController;
+  @Mock
+  private RangeFilterController rangeFilterController;
+  @Mock
+  private CategoryFilterController categoryFilterController;
+
 
   private MapVaultController instance;
   private SortConfig sortOrder;
@@ -81,6 +94,12 @@ public class MapVaultControllerTest extends AbstractPlainJavaFxTest {
       when(mapDetailController.getRoot()).then(invocation1 -> new Pane());
       return mapDetailController;
     }).when(uiService).loadFxml("theme/vault/map/map_detail.fxml");
+
+    when(uiService.loadFxml("theme/vault/search/textFilter.fxml")).thenReturn(textFilterController);
+    when(uiService.loadFxml("theme/vault/search/toggleFilter.fxml")).thenReturn(toggleFilterController);
+    when(uiService.loadFxml("theme/vault/search/categoryFilter.fxml")).thenReturn(categoryFilterController);
+    when(uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml")).thenReturn(dateRangeFilterController);
+    when(uiService.loadFxml("theme/vault/search/rangeFilter.fxml")).thenReturn(rangeFilterController);
 
     instance = new MapVaultController(mapService, i18n, eventBus, preferencesService, uiService, notificationService, reportingService);
     sortOrder = preferencesService.getPreferences().getVaultPrefs().getMapSortConfig();

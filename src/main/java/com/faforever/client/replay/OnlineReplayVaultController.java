@@ -7,11 +7,18 @@ import com.faforever.client.main.event.NavigateEvent;
 import com.faforever.client.main.event.OpenOnlineReplayVaultEvent;
 import com.faforever.client.main.event.ShowReplayEvent;
 import com.faforever.client.main.event.ShowUserReplaysEvent;
+import com.faforever.client.mod.FeaturedMod;
+import com.faforever.client.mod.ModService;
 import com.faforever.client.notification.ImmediateNotification;
 import com.faforever.client.notification.NotificationService;
 import com.faforever.client.notification.Severity;
 import com.faforever.client.preferences.PreferencesService;
+import com.faforever.client.query.CategoryFilterController;
+import com.faforever.client.query.DateRangeFilterController;
+import com.faforever.client.query.RangeFilterController;
 import com.faforever.client.query.SearchablePropertyMappings;
+import com.faforever.client.query.TextFilterController;
+import com.faforever.client.query.ToggleFilterController;
 import com.faforever.client.reporting.ReportingService;
 import com.faforever.client.theme.UiService;
 import com.faforever.client.vault.VaultEntityController;
@@ -27,6 +34,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -35,25 +43,22 @@ public class OnlineReplayVaultController extends VaultEntityController<Replay> {
 
   private static final int TOP_ELEMENT_COUNT = 6;
 
+  private final ModService modService;
   private final ReplayService replayService;
 
   private int playerId;
   private ReplayDetailController replayDetailController;
 
-  public OnlineReplayVaultController(ReplayService replayService, UiService uiService, NotificationService notificationService, I18n i18n, PreferencesService preferencesService, ReportingService reportingService) {
+  public OnlineReplayVaultController(ModService modService, ReplayService replayService, UiService uiService, NotificationService notificationService, I18n i18n, PreferencesService preferencesService, ReportingService reportingService) {
     super(uiService, notificationService, i18n, preferencesService, reportingService);
     this.replayService = replayService;
+    this.modService = modService;
   }
 
   @Override
   public void initialize() {
     super.initialize();
     uploadButton.setVisible(false);
-
-    searchController.setRootType(Game.class);
-    searchController.setSearchableProperties(SearchablePropertyMappings.GAME_PROPERTY_MAPPING);
-    searchController.setSortConfig(preferencesService.getPreferences().getVaultPrefs().onlineReplaySortConfigProperty());
-    searchController.setOnlyShowLastYearCheckBoxVisible(true, true);
   }
 
   @Override
@@ -108,6 +113,77 @@ public class OnlineReplayVaultController extends VaultEntityController<Replay> {
   protected Node getDetailView() {
     replayDetailController = uiService.loadFxml("theme/vault/replay/replay_detail.fxml");
     return replayDetailController.getRoot();
+  }
+
+  protected void initSearchController() {
+    searchController.setRootType(Game.class);
+    searchController.setSearchableProperties(SearchablePropertyMappings.GAME_PROPERTY_MAPPING);
+    searchController.setSortConfig(preferencesService.getPreferences().getVaultPrefs().onlineReplaySortConfigProperty());
+    searchController.setOnlyShowLastYearCheckBoxVisible(true);
+    searchController.setVaultRoot(vaultRoot);
+    searchController.setSavedQueries(preferencesService.getPreferences().getVaultPrefs().getSavedReplayQueries());
+
+    TextFilterController playerFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
+    playerFilterController.setPropertyName("playerStats.player.login");
+    playerFilterController.setTitle(i18n.get("game.player.username"));
+    searchController.addFilterNode(playerFilterController);
+
+    TextFilterController mapNameFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
+    mapNameFilterController.setPropertyName("mapVersion.map.displayName");
+    mapNameFilterController.setTitle(i18n.get("game.map.displayName"));
+    searchController.addFilterNode(mapNameFilterController);
+
+    TextFilterController mapAuthorFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
+    mapAuthorFilterController.setPropertyName("mapVersion.map.author.login");
+    mapAuthorFilterController.setTitle(i18n.get("game.map.author"));
+    searchController.addFilterNode(mapAuthorFilterController);
+
+    TextFilterController gameNameFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
+    gameNameFilterController.setPropertyName("name");
+    gameNameFilterController.setTitle(i18n.get("game.title"));
+    searchController.addFilterNode(gameNameFilterController);
+
+    CategoryFilterController featuredModFilterController = uiService.loadFxml("theme/vault/search/categoryFilter.fxml");
+    featuredModFilterController.setTitle(i18n.get("featuredMod.displayName"));
+    featuredModFilterController.setPropertyName("featuredMod.displayName");
+    searchController.addFilterNode(featuredModFilterController);
+
+    modService.getFeaturedMods().thenAccept(featuredMods ->
+        Platform.runLater(() ->
+            featuredModFilterController.setItems(featuredMods.stream().map(FeaturedMod::getDisplayName)
+                .collect(Collectors.toList()))));
+
+    RangeFilterController ladderRatingRangeFilterController = uiService.loadFxml("theme/vault/search/rangeFilter.fxml");
+    ladderRatingRangeFilterController.setTitle(i18n.get("game.ladderRating"));
+    ladderRatingRangeFilterController.setPropertyName("playerStats.player.ladder1v1Rating.rating");
+    ladderRatingRangeFilterController.setMin(0.0);
+    ladderRatingRangeFilterController.setMax(3000.0);
+    ladderRatingRangeFilterController.setIncrement(100.0);
+    ladderRatingRangeFilterController.setTickUnit(100.0);
+    ladderRatingRangeFilterController.setSnapToTicks(true);
+    searchController.addFilterNode(ladderRatingRangeFilterController);
+
+    RangeFilterController globalRatingRangeFilterController = uiService.loadFxml("theme/vault/search/rangeFilter.fxml");
+    globalRatingRangeFilterController.setTitle(i18n.get("game.globalRating"));
+    globalRatingRangeFilterController.setPropertyName("playerStats.player.globalRating.rating");
+    globalRatingRangeFilterController.setMin(0.0);
+    globalRatingRangeFilterController.setMax(3000.0);
+    globalRatingRangeFilterController.setIncrement(100.0);
+    globalRatingRangeFilterController.setTickUnit(100.0);
+    globalRatingRangeFilterController.setSnapToTicks(true);
+    searchController.addFilterNode(globalRatingRangeFilterController);
+
+    DateRangeFilterController dateRangeFilterController = uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml");
+    dateRangeFilterController.setTitle(i18n.get("game.date"));
+    dateRangeFilterController.setPropertyName("endTime");
+    dateRangeFilterController.setInitialYearsBefore(1);
+    searchController.addFilterNode(dateRangeFilterController);
+
+    ToggleFilterController validityFilterController = uiService.loadFxml("theme/vault/search/toggleFilter.fxml");
+    validityFilterController.setTitle(i18n.get("game.onlyRanked"));
+    validityFilterController.setPropertyName("validity");
+    validityFilterController.setValue("VALID");
+    searchController.addFilterNode(validityFilterController);
   }
 
   @Override

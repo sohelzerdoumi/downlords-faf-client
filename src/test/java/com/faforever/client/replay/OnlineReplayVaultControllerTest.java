@@ -3,12 +3,18 @@ package com.faforever.client.replay;
 import com.faforever.client.i18n.I18n;
 import com.faforever.client.main.event.OpenOnlineReplayVaultEvent;
 import com.faforever.client.main.event.ShowReplayEvent;
+import com.faforever.client.mod.ModService;
 import com.faforever.client.notification.ImmediateNotification;
 import com.faforever.client.notification.NotificationService;
 import com.faforever.client.preferences.Preferences;
 import com.faforever.client.preferences.PreferencesService;
+import com.faforever.client.query.CategoryFilterController;
+import com.faforever.client.query.DateRangeFilterController;
 import com.faforever.client.query.LogicalNodeController;
+import com.faforever.client.query.RangeFilterController;
 import com.faforever.client.query.SpecificationController;
+import com.faforever.client.query.TextFilterController;
+import com.faforever.client.query.ToggleFilterController;
 import com.faforever.client.reporting.ReportingService;
 import com.faforever.client.test.AbstractPlainJavaFxTest;
 import com.faforever.client.theme.UiService;
@@ -45,6 +51,8 @@ public class OnlineReplayVaultControllerTest extends AbstractPlainJavaFxTest {
   private OnlineReplayVaultController instance;
 
   @Mock
+  private ModService modService;
+  @Mock
   private ReplayService replayService;
   @Mock
   private UiService uiService;
@@ -66,6 +74,16 @@ public class OnlineReplayVaultControllerTest extends AbstractPlainJavaFxTest {
   private ReportingService reportingService;
   @Mock
   private VaultEntityShowRoomController vaultEntityShowRoomController;
+  @Mock
+  private TextFilterController textFilterController;
+  @Mock
+  private ToggleFilterController toggleFilterController;
+  @Mock
+  private DateRangeFilterController dateRangeFilterController;
+  @Mock
+  private RangeFilterController rangeFilterController;
+  @Mock
+  private CategoryFilterController categoryFilterController;
 
   @Captor
   private ArgumentCaptor<Consumer<SearchConfig>> searchListenerCaptor;
@@ -79,20 +97,27 @@ public class OnlineReplayVaultControllerTest extends AbstractPlainJavaFxTest {
 
     when(uiService.loadFxml("theme/vault/replay/replay_detail.fxml")).thenAnswer(invocation -> replayDetailController);
 
+    when(modService.getFeaturedMods()).thenReturn(CompletableFuture.completedFuture(Collections.emptyList()));
     when(replayService.getNewestReplaysWithPageCount(anyInt(), anyInt())).thenReturn(CompletableFuture.completedFuture(new Tuple<>(Collections.emptyList(), 0)));
     when(replayService.getHighestRatedReplaysWithPageCount(anyInt(), anyInt())).thenReturn(CompletableFuture.completedFuture(new Tuple<>(Collections.emptyList(), 0)));
     when(replayService.findById(anyInt())).thenReturn(CompletableFuture.completedFuture(Optional.of(testReplay)));
-    when(replayService.getOwnReplaysWithPageCount(anyInt(),anyInt())).thenReturn(CompletableFuture.completedFuture(new Tuple<>(Collections.emptyList(), 0)));
+    when(replayService.getOwnReplaysWithPageCount(anyInt(), anyInt())).thenReturn(CompletableFuture.completedFuture(new Tuple<>(Collections.emptyList(), 0)));
     when(preferencesService.getPreferences()).thenReturn(new Preferences());
     when(uiService.loadFxml("theme/vault/vault_entity_show_room.fxml")).thenReturn(vaultEntityShowRoomController);
+    when(uiService.loadFxml("theme/vault/search/textFilter.fxml")).thenReturn(textFilterController);
+    when(uiService.loadFxml("theme/vault/search/toggleFilter.fxml")).thenReturn(toggleFilterController);
+    when(uiService.loadFxml("theme/vault/search/categoryFilter.fxml")).thenReturn(categoryFilterController);
+    when(uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml")).thenReturn(dateRangeFilterController);
+    when(uiService.loadFxml("theme/vault/search/rangeFilter.fxml")).thenReturn(rangeFilterController);
     when(vaultEntityShowRoomController.getRoot()).thenReturn(new VBox());
     when(vaultEntityShowRoomController.getLabel()).thenReturn(new Label());
     when(vaultEntityShowRoomController.getMoreButton()).thenReturn(new Button());
     when(vaultEntityShowRoomController.getPane()).thenReturn(new FlowPane());
+
     sortOrder = preferencesService.getPreferences().getVaultPrefs().getOnlineReplaySortConfig();
     standardSearchConfig = new SearchConfig(sortOrder, "query");
 
-    instance = new OnlineReplayVaultController(replayService, uiService, notificationService, i18n, preferencesService, reportingService);
+    instance = new OnlineReplayVaultController(modService, replayService, uiService, notificationService, i18n, preferencesService, reportingService);
 
     loadFxml("theme/vault/vault_entity.fxml", clazz -> {
       if (SearchController.class.isAssignableFrom(clazz)) {

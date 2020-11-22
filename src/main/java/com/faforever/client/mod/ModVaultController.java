@@ -4,10 +4,15 @@ import com.faforever.client.fx.JavaFxUtil;
 import com.faforever.client.i18n.I18n;
 import com.faforever.client.main.event.NavigateEvent;
 import com.faforever.client.main.event.OpenModVaultEvent;
+import com.faforever.client.mod.ModVersion.ModType;
 import com.faforever.client.mod.event.ModUploadedEvent;
 import com.faforever.client.notification.NotificationService;
 import com.faforever.client.preferences.PreferencesService;
+import com.faforever.client.query.BinaryFilterController;
+import com.faforever.client.query.DateRangeFilterController;
 import com.faforever.client.query.SearchablePropertyMappings;
+import com.faforever.client.query.TextFilterController;
+import com.faforever.client.query.ToggleFilterController;
 import com.faforever.client.reporting.ReportingService;
 import com.faforever.client.theme.UiService;
 import com.faforever.client.ui.dialog.Dialog;
@@ -51,11 +56,6 @@ public class ModVaultController extends VaultEntityController<ModVersion> {
     JavaFxUtil.fixScrollSpeed(scrollPane);
 
     eventBus.register(this);
-
-    searchController.setRootType(com.faforever.client.api.dto.Mod.class);
-    searchController.setSearchableProperties(SearchablePropertyMappings.MOD_PROPERTY_MAPPING);
-    searchController.setSortConfig(preferencesService.getPreferences().getVaultPrefs().modVaultConfigProperty());
-    searchController.setOnlyShowLastYearCheckBoxVisible(false, false);
 
     manageModsButton.setVisible(true);
     manageModsButton.setOnAction(event -> manageMods());
@@ -120,6 +120,43 @@ public class ModVaultController extends VaultEntityController<ModVersion> {
   protected Node getDetailView() {
     modDetailController = uiService.loadFxml("theme/vault/mod/mod_detail.fxml");
     return modDetailController.getRoot();
+  }
+
+  protected void initSearchController() {
+    searchController.setRootType(com.faforever.client.api.dto.Mod.class);
+    searchController.setSearchableProperties(SearchablePropertyMappings.MOD_PROPERTY_MAPPING);
+    searchController.setSortConfig(preferencesService.getPreferences().getVaultPrefs().mapSortConfigProperty());
+    searchController.setOnlyShowLastYearCheckBoxVisible(false);
+    searchController.setVaultRoot(vaultRoot);
+    searchController.setSavedQueries(preferencesService.getPreferences().getVaultPrefs().getSavedModQueries());
+
+    TextFilterController modNameFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
+    modNameFilterController.setPropertyName("displayName");
+    modNameFilterController.setTitle(i18n.get("mod.displayName"));
+    searchController.addFilterNode(modNameFilterController);
+
+    TextFilterController authorFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
+    authorFilterController.setPropertyName("author");
+    authorFilterController.setTitle(i18n.get("mod.author"));
+    searchController.addFilterNode(authorFilterController);
+
+
+    DateRangeFilterController dateRangeFilterController = uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml");
+    dateRangeFilterController.setTitle(i18n.get("mod.updatedDateTime"));
+    dateRangeFilterController.setPropertyName("latestVersion.updateTime");
+    searchController.addFilterNode(dateRangeFilterController);
+
+    BinaryFilterController modTypeFilterController = uiService.loadFxml("theme/vault/search/binaryFilter.fxml");
+    modTypeFilterController.setTitle(i18n.get("mod.type"));
+    modTypeFilterController.setPropertyName("latestVersion.type");
+    modTypeFilterController.setOptions(i18n.get("modType.ui"), ModType.UI.toString(), i18n.get("modType.sim"), ModType.SIM.toString());
+    searchController.addFilterNode(modTypeFilterController);
+
+    ToggleFilterController modRankedFilterController = uiService.loadFxml("theme/vault/search/toggleFilter.fxml");
+    modRankedFilterController.setTitle(i18n.get("mod.onlyRanked"));
+    modRankedFilterController.setPropertyName("latestVersion.ranked");
+    modRankedFilterController.setValue("true");
+    searchController.addFilterNode(modRankedFilterController);
   }
 
   @Override
