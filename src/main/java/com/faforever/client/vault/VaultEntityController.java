@@ -47,10 +47,6 @@ import java.util.stream.Collectors;
 public abstract class VaultEntityController<T> extends AbstractViewController<Node> {
 
   protected static final int TOP_ELEMENT_COUNT = 7;
-  /**
-   * How many cards should be badged into one UI thread runnable.
-   */
-  private static final int BATCH_SIZE = 10;
   protected final UiService uiService;
   protected final NotificationService notificationService;
   protected final I18n i18n;

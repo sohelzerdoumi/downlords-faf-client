@@ -79,6 +79,7 @@ public class CategoryFilterControllerTest extends AbstractPlainJavaFxTest {
 
     instance.checkListView.getItems().forEach(item ->
         assertFalse(instance.checkListView.getItemBooleanProperty(item).getValue()));
+    assertFalse(instance.checkListView.getItems().isEmpty());
   }
 
   @Test

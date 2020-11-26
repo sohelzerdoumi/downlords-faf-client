@@ -104,17 +104,17 @@ public class SearchControllerTest extends AbstractPlainJavaFxTest {
 
   @Test
   public void testSearchTypeChange() {
-    assertFalse(instance.filterPane.isVisible());
-    assertTrue(instance.criteriaPane.isVisible());
-    assertFalse(instance.onlyShowLastYearCheckBox.isVisible());
-    assertTrue(instance.addCriteriaButton.isVisible());
-
-    instance.onSearchTypeButtonClicked();
-
     assertTrue(instance.filterPane.isVisible());
     assertFalse(instance.criteriaPane.isVisible());
     assertFalse(instance.onlyShowLastYearCheckBox.isVisible());
     assertFalse(instance.addCriteriaButton.isVisible());
+
+    instance.onSearchTypeButtonClicked();
+
+    assertFalse(instance.filterPane.isVisible());
+    assertTrue(instance.criteriaPane.isVisible());
+    assertFalse(instance.onlyShowLastYearCheckBox.isVisible());
+    assertTrue(instance.addCriteriaButton.isVisible());
   }
 
   @Test

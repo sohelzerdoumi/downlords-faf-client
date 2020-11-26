@@ -38,6 +38,7 @@ public class SavedQueriesController implements Controller<Parent> {
 
   public void onRemoveQueryButtonClicked() {
     queries.remove(queryListView.getSelectionModel().getSelectedItems().get(0));
+    queryListView.getItems().remove(queryListView.getSelectionModel().getSelectedItems().get(0));
     queryListView.getSelectionModel().clearSelection();
   }
 

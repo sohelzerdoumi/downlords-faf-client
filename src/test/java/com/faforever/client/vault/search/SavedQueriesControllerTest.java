@@ -51,5 +51,6 @@ public class SavedQueriesControllerTest extends AbstractPlainJavaFxTest {
 
     assertFalse(savedQueries.containsKey("name"));
     assertTrue(instance.queryListView.getSelectionModel().isEmpty());
+    assertFalse(instance.queryListView.getItems().contains("name"));
   }
 }
