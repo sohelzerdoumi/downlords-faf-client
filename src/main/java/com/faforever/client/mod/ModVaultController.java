@@ -142,7 +142,7 @@ public class ModVaultController extends VaultEntityController<ModVersion> {
 
 
     DateRangeFilterController dateRangeFilterController = uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml");
-    dateRangeFilterController.setTitle(i18n.get("mod.updatedDateTime"));
+    dateRangeFilterController.setTitle(i18n.get("mod.uploadedDateTime"));
     dateRangeFilterController.setPropertyName("latestVersion.updateTime");
     searchController.addFilterNode(dateRangeFilterController);
 

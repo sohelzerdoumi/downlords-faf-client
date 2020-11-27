@@ -168,14 +168,14 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
 
   @Test
   public void testGetRoot() throws Exception {
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     assertEquals(instance.root, instance.getRoot());
     assertNull(instance.getRoot().getParent());
   }
 
   @Test
   public void testOnDisplay() {
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
     assertTrue(instance.showRoomGroup.isVisible());
     assertFalse(instance.searchResultGroup.isVisible());
@@ -186,7 +186,7 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
   @Test
   public void testEmptyShowRoom() {
     items = createMockElements(0);
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
     assertFalse(showRoomRoot.isVisible());
     assertEquals(1, instance.showRoomGroup.getChildren().size());
@@ -197,7 +197,7 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
     List<Integer> elePage1 = getMockPageElements(items, instance.pageSize, 0);
     List<Integer> elePage3 = getMockPageElements(items, instance.pageSize, 2);
 
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
 
     // first page / search results
@@ -224,7 +224,7 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
   public void testLastPageButton() {
     List<Integer> elePage3 = getMockPageElements(items, instance.pageSize, 2);
 
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
 
     moreButton.fire();
@@ -241,7 +241,7 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
   public void testFirstPageButton() {
     List<Integer> elePage1 = getMockPageElements(items, instance.pageSize, 0);
 
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
 
     moreButton.fire();
@@ -258,7 +258,7 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
   public void testPageSize() {
     int newPageSize = 30;
 
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
 
     instance.perPageComboBox.setValue(newPageSize);
@@ -277,7 +277,7 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
   public void testPageSizeChange() {
     int newPageSize = 30;
 
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
 
     List<Integer> elePage1 = getMockPageElements(items, instance.pageSize, 0);
@@ -307,7 +307,7 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
 
   @Test
   public void testOnFirstPageChange() {
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
 
     moreButton.fire();
@@ -325,7 +325,7 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
 
   @Test
   public void testOnBackButton() {
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
     assertTrue(instance.showRoomGroup.isVisible());
     assertFalse(instance.searchResultGroup.isVisible());
@@ -343,7 +343,7 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
 
   @Test
   public void testOnSearch() {
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
     assertTrue(instance.showRoomGroup.isVisible());
     assertFalse(instance.searchResultGroup.isVisible());
@@ -356,7 +356,7 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
 
   @Test
   public void testRefreshShowRoom() {
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
     assertTrue(instance.showRoomGroup.isVisible());
     assertFalse(instance.searchResultGroup.isVisible());
@@ -369,7 +369,7 @@ public class VaultEntityControllerTest extends AbstractPlainJavaFxTest {
 
   @Test
   public void testRefreshSearch() {
-    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.VAULT)));
+    Platform.runLater(() -> instance.display(new NavigateEvent(NavigationItem.MAP)));
     WaitForAsyncUtils.waitForFxEvents();
     assertTrue(instance.showRoomGroup.isVisible());
     assertFalse(instance.searchResultGroup.isVisible());

@@ -91,7 +91,7 @@ public class MapVaultController extends VaultEntityController<MapBean> {
     searchController.addFilterNode(authorFilterController);
 
     DateRangeFilterController dateRangeFilterController = uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml");
-    dateRangeFilterController.setTitle(i18n.get("map.updatedDateTime"));
+    dateRangeFilterController.setTitle(i18n.get("map.uploadedDateTime"));
     dateRangeFilterController.setPropertyName("latestVersion.updateTime");
     searchController.addFilterNode(dateRangeFilterController);
 
@@ -125,16 +125,6 @@ public class MapVaultController extends VaultEntityController<MapBean> {
     playerCountFilterController.setTickUnit(1.0);
     playerCountFilterController.setSnapToTicks(true);
     searchController.addFilterNode(playerCountFilterController);
-
-    RangeFilterController mapPlaysFilterController = uiService.loadFxml("theme/vault/search/rangeFilter.fxml");
-    mapPlaysFilterController.setTitle(i18n.get("map.playCount"));
-    mapPlaysFilterController.setPropertyName("statistics.plays");
-    mapPlaysFilterController.setMin(0.0);
-    mapPlaysFilterController.setMax(10000.0);
-    mapPlaysFilterController.setIncrement(10.0);
-    mapPlaysFilterController.setTickUnit(1000.0);
-    mapPlaysFilterController.setSnapToTicks(true);
-    searchController.addFilterNode(mapPlaysFilterController);
 
     ToggleFilterController mapRankedFilterController = uiService.loadFxml("theme/vault/search/toggleFilter.fxml");
     mapRankedFilterController.setTitle(i18n.get("map.onlyRanked"));

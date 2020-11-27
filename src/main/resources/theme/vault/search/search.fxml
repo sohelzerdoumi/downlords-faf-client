@@ -22,14 +22,11 @@
     <HBox alignment="CENTER_LEFT" spacing="10.0">
         <Button layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" mnemonicParsing="false"
                 onAction="#onResetButtonClicked" text="%reset"/>
-        <Button fx:id="savedQueriesButton" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308"
-                mnemonicParsing="false"
-                onAction="#onSavedQueriesButtonClicked" text="%vault.savedQueries"/>
+        <Button fx:id="addCriteriaButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false"
+                onAction="#onAddCriteriaButtonClicked" text="%query.addCriteria" visible="false"/>
         <Button fx:id="searchTypeButton" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308"
                 mnemonicParsing="false"
                 onAction="#onSearchTypeButtonClicked" text="%logical"/>
-        <Button fx:id="addCriteriaButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false"
-                onAction="#onAddCriteriaButtonClicked" text="%query.addCriteria" visible="false"/>
         <HBox fx:id="sortBox" alignment="CENTER_LEFT" spacing="5">
             <padding>
                 <Insets left="20" right="20"/>
@@ -41,11 +38,12 @@
         <CheckBox fx:id="onlyShowLastYearCheckBox" mnemonicParsing="false"
                   text="%vault.replays.onlyShowLastYear" visible="false"/>
         <Button fx:id="searchButton" defaultButton="true" mnemonicParsing="false"
-                onAction="#onSearchButtonClicked" text="%search">
-        </Button>
+                onAction="#onSearchButtonClicked" text="%search"/>
         <Button fx:id="saveQueryButton" defaultButton="true" mnemonicParsing="false"
-                onAction="#onSaveQueryButtonClicked" text="%saveQuery">
-        </Button>
+                onAction="#onSaveQueryButtonClicked" text="%saveQuery"/>
+        <Button fx:id="savedQueriesButton" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308"
+                mnemonicParsing="false"
+                onAction="#onSavedQueriesButtonClicked" text="%vault.savedQueries"/>
         <CheckBox fx:id="displayQueryCheckBox" mnemonicParsing="false" text="%vault.replays.displayQuery"/>
     </HBox>
     <TextField fx:id="queryTextField" onAction="#onSearchButtonClicked" maxWidth="1.7976931348623157E308"
