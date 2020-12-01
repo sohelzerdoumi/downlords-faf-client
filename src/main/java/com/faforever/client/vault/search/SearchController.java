@@ -191,9 +191,11 @@ public class SearchController implements Controller<Pane> {
   }
 
   public void onSearchButtonClicked() {
-    String sortPropertyKey = getCurrentEntityKey();
-    lastSearchConfig = new SearchConfig(new SortConfig(sortPropertyKey, sortOrderChoiceBox.getValue()), queryTextField.getText());
-    searchListener.accept(lastSearchConfig);
+    if (!searchButton.isDisabled()) {
+      String sortPropertyKey = getCurrentEntityKey();
+      lastSearchConfig = new SearchConfig(new SortConfig(sortPropertyKey, sortOrderChoiceBox.getValue()), queryTextField.getText());
+      searchListener.accept(lastSearchConfig);
+    }
   }
 
   public SearchConfig getLastSearchConfig() {

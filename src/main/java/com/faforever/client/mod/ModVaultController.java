@@ -133,11 +133,13 @@ public class ModVaultController extends VaultEntityController<ModVersion> {
     TextFilterController modNameFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
     modNameFilterController.setPropertyName("displayName");
     modNameFilterController.setTitle(i18n.get("mod.displayName"));
+    modNameFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
     searchController.addFilterNode(modNameFilterController);
 
     TextFilterController authorFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
     authorFilterController.setPropertyName("author");
     authorFilterController.setTitle(i18n.get("mod.author"));
+    authorFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
     searchController.addFilterNode(authorFilterController);
 
 

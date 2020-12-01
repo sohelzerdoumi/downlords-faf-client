@@ -83,11 +83,13 @@ public class MapVaultController extends VaultEntityController<MapBean> {
     TextFilterController mapNameFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
     mapNameFilterController.setPropertyName("displayName");
     mapNameFilterController.setTitle(i18n.get("map.name"));
+    mapNameFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
     searchController.addFilterNode(mapNameFilterController);
 
     TextFilterController authorFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
     authorFilterController.setPropertyName("author.login");
     authorFilterController.setTitle(i18n.get("map.author"));
+    authorFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
     searchController.addFilterNode(authorFilterController);
 
     DateRangeFilterController dateRangeFilterController = uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml");

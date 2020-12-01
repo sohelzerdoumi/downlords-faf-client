@@ -126,26 +126,31 @@ public class OnlineReplayVaultController extends VaultEntityController<Replay> {
     TextFilterController playerFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
     playerFilterController.setPropertyName("playerStats.player.login");
     playerFilterController.setTitle(i18n.get("game.player.username"));
+    playerFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
     searchController.addFilterNode(playerFilterController);
 
     TextFilterController mapNameFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
     mapNameFilterController.setPropertyName("mapVersion.map.displayName");
     mapNameFilterController.setTitle(i18n.get("game.map.displayName"));
+    mapNameFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
     searchController.addFilterNode(mapNameFilterController);
 
     TextFilterController mapAuthorFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
     mapAuthorFilterController.setPropertyName("mapVersion.map.author.login");
     mapAuthorFilterController.setTitle(i18n.get("game.map.author"));
+    mapAuthorFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
     searchController.addFilterNode(mapAuthorFilterController);
 
     TextFilterController gameNameFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
     gameNameFilterController.setPropertyName("name");
     gameNameFilterController.setTitle(i18n.get("game.title"));
+    gameNameFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
     searchController.addFilterNode(gameNameFilterController);
 
     TextFilterController gameIDFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
     gameIDFilterController.setPropertyName("id");
     gameIDFilterController.setTitle(i18n.get("game.id"));
+    gameIDFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
     searchController.addFilterNode(gameIDFilterController);
 
     CategoryFilterController featuredModFilterController = uiService.loadFxml("theme/vault/search/categoryFilter.fxml");

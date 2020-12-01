@@ -61,6 +61,10 @@ public class TextFilterController implements FilterNodeController {
     textField.setPromptText(title);
   }
 
+  public void setOnAction(Runnable runnable) {
+    textField.setOnAction(event -> runnable.run());
+  }
+
   @Override
   public Node getRoot() {
     return textBox;
