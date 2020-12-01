@@ -8,7 +8,9 @@ import com.google.common.base.Strings;
 import javafx.beans.InvalidationListener;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import lombok.Data;
+import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -22,11 +24,14 @@ import java.util.Optional;
 @Data
 public class TextFilterController implements FilterNodeController {
 
+  public VBox textBox;
   public TextField textField;
   private String propertyName;
 
   public void initialize() {
+    textField = TextFields.createClearableTextField();
     JavaFxUtil.bindManagedToVisible(textField);
+    textBox.getChildren().add(textField);
   }
 
   public Optional<List<Condition>> getCondition() {
@@ -58,7 +63,7 @@ public class TextFilterController implements FilterNodeController {
 
   @Override
   public Node getRoot() {
-    return textField;
+    return textBox;
   }
 
 }
