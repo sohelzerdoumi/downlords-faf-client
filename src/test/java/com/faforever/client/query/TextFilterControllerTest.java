@@ -6,7 +6,7 @@ import com.github.rutledgepaulv.qbuilders.conditions.Condition;
 import com.github.rutledgepaulv.qbuilders.properties.concrete.StringProperty;
 import com.github.rutledgepaulv.qbuilders.visitors.RSQLVisitor;
 import javafx.beans.InvalidationListener;
-import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -62,7 +62,7 @@ public class TextFilterControllerTest extends AbstractPlainJavaFxTest {
 
   @Test
   public void testGetRoot() throws Exception {
-    assertTrue(instance.getRoot() instanceof TextField);
+    assertTrue(instance.getRoot() instanceof VBox);
   }
 
   @Test
