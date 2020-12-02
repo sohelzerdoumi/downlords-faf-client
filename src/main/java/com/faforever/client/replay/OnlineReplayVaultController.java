@@ -14,11 +14,7 @@ import com.faforever.client.notification.NotificationService;
 import com.faforever.client.notification.Severity;
 import com.faforever.client.preferences.PreferencesService;
 import com.faforever.client.query.CategoryFilterController;
-import com.faforever.client.query.DateRangeFilterController;
-import com.faforever.client.query.RangeFilterController;
 import com.faforever.client.query.SearchablePropertyMappings;
-import com.faforever.client.query.TextFilterController;
-import com.faforever.client.query.ToggleFilterController;
 import com.faforever.client.reporting.ReportingService;
 import com.faforever.client.theme.UiService;
 import com.faforever.client.vault.VaultEntityController;
@@ -123,35 +119,11 @@ public class OnlineReplayVaultController extends VaultEntityController<Replay> {
     searchController.setVaultRoot(vaultRoot);
     searchController.setSavedQueries(preferencesService.getPreferences().getVaultPrefs().getSavedReplayQueries());
 
-    TextFilterController playerFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
-    playerFilterController.setPropertyName("playerStats.player.login");
-    playerFilterController.setTitle(i18n.get("game.player.username"));
-    playerFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
-    searchController.addFilterNode(playerFilterController);
-
-    TextFilterController mapNameFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
-    mapNameFilterController.setPropertyName("mapVersion.map.displayName");
-    mapNameFilterController.setTitle(i18n.get("game.map.displayName"));
-    mapNameFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
-    searchController.addFilterNode(mapNameFilterController);
-
-    TextFilterController mapAuthorFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
-    mapAuthorFilterController.setPropertyName("mapVersion.map.author.login");
-    mapAuthorFilterController.setTitle(i18n.get("game.map.author"));
-    mapAuthorFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
-    searchController.addFilterNode(mapAuthorFilterController);
-
-    TextFilterController gameNameFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
-    gameNameFilterController.setPropertyName("name");
-    gameNameFilterController.setTitle(i18n.get("game.title"));
-    gameNameFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
-    searchController.addFilterNode(gameNameFilterController);
-
-    TextFilterController gameIDFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
-    gameIDFilterController.setPropertyName("id");
-    gameIDFilterController.setTitle(i18n.get("game.id"));
-    gameIDFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
-    searchController.addFilterNode(gameIDFilterController);
+    searchController.addTextFilter("playerStats.player.login", i18n.get("game.player.username"));
+    searchController.addTextFilter("mapVersion.map.displayName", i18n.get("game.map.displayName"));
+    searchController.addTextFilter("mapVersion.map.author.login", i18n.get("game.map.author"));
+    searchController.addTextFilter("name", i18n.get("game.title"));
+    searchController.addTextFilter("id", i18n.get("game.id"));
 
     CategoryFilterController featuredModFilterController = uiService.loadFxml("theme/vault/search/categoryFilter.fxml");
     featuredModFilterController.setTitle(i18n.get("featuredMod.displayName"));
@@ -163,37 +135,13 @@ public class OnlineReplayVaultController extends VaultEntityController<Replay> {
             featuredModFilterController.setItems(featuredMods.stream().map(FeaturedMod::getDisplayName)
                 .collect(Collectors.toList()))));
 
-    RangeFilterController ladderRatingRangeFilterController = uiService.loadFxml("theme/vault/search/rangeFilter.fxml");
-    ladderRatingRangeFilterController.setTitle(i18n.get("game.ladderRating"));
-    ladderRatingRangeFilterController.setPropertyName("playerStats.player.ladder1v1Rating.rating");
-    ladderRatingRangeFilterController.setMin(0.0);
-    ladderRatingRangeFilterController.setMax(3000.0);
-    ladderRatingRangeFilterController.setIncrement(100.0);
-    ladderRatingRangeFilterController.setTickUnit(100.0);
-    ladderRatingRangeFilterController.setSnapToTicks(true);
-    searchController.addFilterNode(ladderRatingRangeFilterController);
+    searchController.addRangeFilter("playerStats.player.ladder1v1Rating.rating", i18n.get("game.ladderRating"),
+        0, 3000, 100);
+    searchController.addRangeFilter("playerStats.player.globalRating.rating", i18n.get("game.globalRating"),
+        0, 3000, 100);
+    searchController.addDateRangeFilter("endTime", i18n.get("game.date"), 1);
+    searchController.addToggleFilter("validity", i18n.get("game.onlyRanked"), "VALID");
 
-    RangeFilterController globalRatingRangeFilterController = uiService.loadFxml("theme/vault/search/rangeFilter.fxml");
-    globalRatingRangeFilterController.setTitle(i18n.get("game.globalRating"));
-    globalRatingRangeFilterController.setPropertyName("playerStats.player.globalRating.rating");
-    globalRatingRangeFilterController.setMin(0.0);
-    globalRatingRangeFilterController.setMax(3000.0);
-    globalRatingRangeFilterController.setIncrement(100.0);
-    globalRatingRangeFilterController.setTickUnit(100.0);
-    globalRatingRangeFilterController.setSnapToTicks(true);
-    searchController.addFilterNode(globalRatingRangeFilterController);
-
-    DateRangeFilterController dateRangeFilterController = uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml");
-    dateRangeFilterController.setTitle(i18n.get("game.date"));
-    dateRangeFilterController.setPropertyName("endTime");
-    dateRangeFilterController.setInitialYearsBefore(1);
-    searchController.addFilterNode(dateRangeFilterController);
-
-    ToggleFilterController validityFilterController = uiService.loadFxml("theme/vault/search/toggleFilter.fxml");
-    validityFilterController.setTitle(i18n.get("game.onlyRanked"));
-    validityFilterController.setPropertyName("validity");
-    validityFilterController.setValue("VALID");
-    searchController.addFilterNode(validityFilterController);
   }
 
   @Override

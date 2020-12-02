@@ -8,11 +8,7 @@ import com.faforever.client.mod.ModVersion.ModType;
 import com.faforever.client.mod.event.ModUploadedEvent;
 import com.faforever.client.notification.NotificationService;
 import com.faforever.client.preferences.PreferencesService;
-import com.faforever.client.query.BinaryFilterController;
-import com.faforever.client.query.DateRangeFilterController;
 import com.faforever.client.query.SearchablePropertyMappings;
-import com.faforever.client.query.TextFilterController;
-import com.faforever.client.query.ToggleFilterController;
 import com.faforever.client.reporting.ReportingService;
 import com.faforever.client.theme.UiService;
 import com.faforever.client.ui.dialog.Dialog;
@@ -130,35 +126,13 @@ public class ModVaultController extends VaultEntityController<ModVersion> {
     searchController.setVaultRoot(vaultRoot);
     searchController.setSavedQueries(preferencesService.getPreferences().getVaultPrefs().getSavedModQueries());
 
-    TextFilterController modNameFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
-    modNameFilterController.setPropertyName("displayName");
-    modNameFilterController.setTitle(i18n.get("mod.displayName"));
-    modNameFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
-    searchController.addFilterNode(modNameFilterController);
+    searchController.addTextFilter("displayName", i18n.get("mod.displayName"));
+    searchController.addTextFilter("author", i18n.get("mod.author"));
+    searchController.addDateRangeFilter("latestVersion.updateTime", i18n.get("mod.uploadedDateTime"), 0);
 
-    TextFilterController authorFilterController = uiService.loadFxml("theme/vault/search/textFilter.fxml");
-    authorFilterController.setPropertyName("author");
-    authorFilterController.setTitle(i18n.get("mod.author"));
-    authorFilterController.setOnAction(() -> searchController.onSearchButtonClicked());
-    searchController.addFilterNode(authorFilterController);
-
-
-    DateRangeFilterController dateRangeFilterController = uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml");
-    dateRangeFilterController.setTitle(i18n.get("mod.uploadedDateTime"));
-    dateRangeFilterController.setPropertyName("latestVersion.updateTime");
-    searchController.addFilterNode(dateRangeFilterController);
-
-    BinaryFilterController modTypeFilterController = uiService.loadFxml("theme/vault/search/binaryFilter.fxml");
-    modTypeFilterController.setTitle(i18n.get("mod.type"));
-    modTypeFilterController.setPropertyName("latestVersion.type");
-    modTypeFilterController.setOptions(i18n.get("modType.ui"), ModType.UI.toString(), i18n.get("modType.sim"), ModType.SIM.toString());
-    searchController.addFilterNode(modTypeFilterController);
-
-    ToggleFilterController modRankedFilterController = uiService.loadFxml("theme/vault/search/toggleFilter.fxml");
-    modRankedFilterController.setTitle(i18n.get("mod.onlyRanked"));
-    modRankedFilterController.setPropertyName("latestVersion.ranked");
-    modRankedFilterController.setValue("true");
-    searchController.addFilterNode(modRankedFilterController);
+    searchController.addBinaryFilter("latestVersion.width", i18n.get("map.width"),
+        ModType.UI.toString(), ModType.SIM.toString(), i18n.get("modType.ui"), i18n.get("modType.sim"));
+    searchController.addToggleFilter("latestVersion.ranked", i18n.get("mod.onlyRanked"), "true");
   }
 
   @Override
