@@ -37,6 +37,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -88,18 +89,13 @@ public class MapVaultControllerTest extends AbstractPlainJavaFxTest {
     when(preferencesService.getPreferences()).thenReturn(new Preferences());
     when(preferencesService.getRemotePreferencesAsync()).thenReturn(CompletableFuture.completedFuture(clientConfiguration));
     when(clientConfiguration.getRecommendedMaps()).thenReturn(Collections.emptyList());
+    when(i18n.get(anyString())).thenReturn("test");
 
     doAnswer(invocation -> {
       mapDetailController = mock(MapDetailController.class);
       when(mapDetailController.getRoot()).then(invocation1 -> new Pane());
       return mapDetailController;
     }).when(uiService).loadFxml("theme/vault/map/map_detail.fxml");
-
-    when(uiService.loadFxml("theme/vault/search/textFilter.fxml")).thenReturn(textFilterController);
-    when(uiService.loadFxml("theme/vault/search/toggleFilter.fxml")).thenReturn(toggleFilterController);
-    when(uiService.loadFxml("theme/vault/search/categoryFilter.fxml")).thenReturn(categoryFilterController);
-    when(uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml")).thenReturn(dateRangeFilterController);
-    when(uiService.loadFxml("theme/vault/search/rangeFilter.fxml")).thenReturn(rangeFilterController);
 
     instance = new MapVaultController(mapService, i18n, eventBus, preferencesService, uiService, notificationService, reportingService);
     sortOrder = preferencesService.getPreferences().getVaultPrefs().getMapSortConfig();

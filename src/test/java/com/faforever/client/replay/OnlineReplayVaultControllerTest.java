@@ -9,12 +9,8 @@ import com.faforever.client.notification.NotificationService;
 import com.faforever.client.preferences.Preferences;
 import com.faforever.client.preferences.PreferencesService;
 import com.faforever.client.query.CategoryFilterController;
-import com.faforever.client.query.DateRangeFilterController;
 import com.faforever.client.query.LogicalNodeController;
-import com.faforever.client.query.RangeFilterController;
 import com.faforever.client.query.SpecificationController;
-import com.faforever.client.query.TextFilterController;
-import com.faforever.client.query.ToggleFilterController;
 import com.faforever.client.reporting.ReportingService;
 import com.faforever.client.test.AbstractPlainJavaFxTest;
 import com.faforever.client.theme.UiService;
@@ -25,11 +21,7 @@ import com.faforever.client.vault.search.SearchController;
 import com.faforever.client.vault.search.SearchController.SearchConfig;
 import com.faforever.client.vault.search.SearchController.SortConfig;
 import javafx.application.Platform;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -44,6 +36,7 @@ import java.util.function.Consumer;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -75,14 +68,6 @@ public class OnlineReplayVaultControllerTest extends AbstractPlainJavaFxTest {
   @Mock
   private VaultEntityShowRoomController vaultEntityShowRoomController;
   @Mock
-  private TextFilterController textFilterController;
-  @Mock
-  private ToggleFilterController toggleFilterController;
-  @Mock
-  private DateRangeFilterController dateRangeFilterController;
-  @Mock
-  private RangeFilterController rangeFilterController;
-  @Mock
   private CategoryFilterController categoryFilterController;
 
   @Captor
@@ -103,16 +88,8 @@ public class OnlineReplayVaultControllerTest extends AbstractPlainJavaFxTest {
     when(replayService.findById(anyInt())).thenReturn(CompletableFuture.completedFuture(Optional.of(testReplay)));
     when(replayService.getOwnReplaysWithPageCount(anyInt(), anyInt())).thenReturn(CompletableFuture.completedFuture(new Tuple<>(Collections.emptyList(), 0)));
     when(preferencesService.getPreferences()).thenReturn(new Preferences());
-    when(uiService.loadFxml("theme/vault/vault_entity_show_room.fxml")).thenReturn(vaultEntityShowRoomController);
-    when(uiService.loadFxml("theme/vault/search/textFilter.fxml")).thenReturn(textFilterController);
-    when(uiService.loadFxml("theme/vault/search/toggleFilter.fxml")).thenReturn(toggleFilterController);
     when(uiService.loadFxml("theme/vault/search/categoryFilter.fxml")).thenReturn(categoryFilterController);
-    when(uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml")).thenReturn(dateRangeFilterController);
-    when(uiService.loadFxml("theme/vault/search/rangeFilter.fxml")).thenReturn(rangeFilterController);
-    when(vaultEntityShowRoomController.getRoot()).thenReturn(new VBox());
-    when(vaultEntityShowRoomController.getLabel()).thenReturn(new Label());
-    when(vaultEntityShowRoomController.getMoreButton()).thenReturn(new Button());
-    when(vaultEntityShowRoomController.getPane()).thenReturn(new FlowPane());
+    when(i18n.get(anyString())).thenReturn("test");
 
     sortOrder = preferencesService.getPreferences().getVaultPrefs().getOnlineReplaySortConfig();
     standardSearchConfig = new SearchConfig(sortOrder, "query");

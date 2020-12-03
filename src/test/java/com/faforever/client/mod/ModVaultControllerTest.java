@@ -4,12 +4,8 @@ import com.faforever.client.i18n.I18n;
 import com.faforever.client.notification.NotificationService;
 import com.faforever.client.preferences.Preferences;
 import com.faforever.client.preferences.PreferencesService;
-import com.faforever.client.query.BinaryFilterController;
-import com.faforever.client.query.DateRangeFilterController;
 import com.faforever.client.query.LogicalNodeController;
 import com.faforever.client.query.SpecificationController;
-import com.faforever.client.query.TextFilterController;
-import com.faforever.client.query.ToggleFilterController;
 import com.faforever.client.reporting.ReportingService;
 import com.faforever.client.test.AbstractPlainJavaFxTest;
 import com.faforever.client.theme.UiService;
@@ -32,6 +28,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -61,14 +58,6 @@ public class ModVaultControllerTest extends AbstractPlainJavaFxTest {
   private SpecificationController specificationController;
   @Mock
   private ReportingService reportingService;
-  @Mock
-  private TextFilterController textFilterController;
-  @Mock
-  private ToggleFilterController toggleFilterController;
-  @Mock
-  private DateRangeFilterController dateRangeFilterController;
-  @Mock
-  private BinaryFilterController binaryFilterController;
 
   private SortConfig sortOrder;
   private SearchConfig standardSearchConfig;
@@ -80,11 +69,7 @@ public class ModVaultControllerTest extends AbstractPlainJavaFxTest {
     when(modService.getNewestModsWithPageCount(anyInt(), anyInt())).thenReturn(CompletableFuture.completedFuture(new Tuple<>(Collections.emptyList(), 0)));
     when(modService.getHighestRatedModsWithPageCount(anyInt(), anyInt())).thenReturn(CompletableFuture.completedFuture(new Tuple<>(Collections.emptyList(), 0)));
     when(modService.getHighestRatedUiModsWithPageCount(anyInt(), anyInt())).thenReturn(CompletableFuture.completedFuture(new Tuple<>(Collections.emptyList(), 0)));
-
-    when(uiService.loadFxml("theme/vault/search/textFilter.fxml")).thenReturn(textFilterController);
-    when(uiService.loadFxml("theme/vault/search/toggleFilter.fxml")).thenReturn(toggleFilterController);
-    when(uiService.loadFxml("theme/vault/search/dateRangeFilter.fxml")).thenReturn(dateRangeFilterController);
-    when(uiService.loadFxml("theme/vault/search/binaryFilter.fxml")).thenReturn(binaryFilterController);
+    when(i18n.get(anyString())).thenReturn("test");
 
     sortOrder = preferencesService.getPreferences().getVaultPrefs().getMapSortConfig();
     standardSearchConfig = new SearchConfig(sortOrder, "query");
